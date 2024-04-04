@@ -670,15 +670,20 @@
 }
 
 % Define an environment for cvhonor
-\newenvironment{cvhonors}{%
+\newenvironment{cvhonors}[1][]{%
   \vspace{\acvSectionContentTopSkip}
   \vspace{-2mm}
   \begin{center}
-    \setlength\tabcolsep{0pt}
-    \setlength{\extrarowheight}{0pt}
+  \setlength\tabcolsep{0pt}
+  \setlength{\extrarowheight}{0pt}
+  \ifthenelse{\isempty{#1}{}}{%
     \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} C{1.5cm} L{\textwidth - 4.0cm} R{2.5cm}}
-}{%
-    \end{tabular*}
+    }%
+    {%
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} C{1.5cm} L{\textwidth - 1.5cm} R{#1}}
+    }%
+  }{%
+  \end{tabular*}
   \end{center}
 }
 % Define a line of cv information(honor, award or something else)
