@@ -76,6 +76,8 @@
 \defaultfontfeatures{Ligatures=TeX}
 % Needed to manage math fonts
 \RequirePackage{unicode-math}
+% Reference last page for Page N of M type footers
+\RequirePackage{lastpage}
 % Needed to use icons from font-awesome
 % (https://github.com/posquit0/latex-fontawesome)
 \RequirePackage{fontawesome}
