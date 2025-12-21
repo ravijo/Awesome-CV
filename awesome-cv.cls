@@ -120,12 +120,8 @@
 %-------------------------------------------------------------------------------
 % Configure an optional directory location for fonts(default: 'fonts/')
 % Not required anymore but left in place for backward compatability.
-\newcommand*{\fontdir}[1][fonts/]{\def\@fontdir{#1}}
-\fontdir
-
-% \newfontfamily{\AI}{Academicons}
-% src: https://tex.stackexchange.com/a/476473/49520
-\setfontfamily{\AI}{Academicons}
+% \newcommand*{\fontdir}[1][fonts/]{\def\@fontdir{#1}}
+% \fontdir
 
 %-------------------------------------------------------------------------------
 %                Configuration for layout
@@ -582,7 +578,7 @@
         {}%
         {%
           \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://orcid.org/\@orcid}{\faOrcid\acvHeaderIconSep\@orcid}%
+          \href{https://orcid.org/\@orcid}{\faOrcid\acvHeaderIconSep{ORCID}}%
         }%
       \ifthenelse{\isundefined{\@twitter}}%
         {}%
@@ -654,13 +650,7 @@
         {}%
         {%
           \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://scholar.google.com/citations?user=\@googlescholarid}{\aiGoogleScholarSquare\acvHeaderIconSep\@googlescholarname}%
-        }%
-      \ifthenelse{\isundefined{\@orcidid}}%
-        {}%
-        {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://orcid.org/\@orcidid}{\aiOrcid\acvHeaderIconSep{ORCiD}}%
+          \href{https://scholar.google.com/citations?user=\@googlescholarid}{\faGraduationCap\acvHeaderIconSep\@googlescholarname}%
         }%
       \ifthenelse{\isundefined{\@extrainfo}}%
         {}%
