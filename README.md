@@ -31,7 +31,7 @@ This fork supports:
 
 #### CV
 
-You can see [PDF](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf)
+You can see genereted PDF [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf)
 
 | Page. 1 | Page. 2 |
 |:---:|:---:|
@@ -49,7 +49,7 @@ Execute the following commnad on the terminal:
 $ cd path/to/Awesome-CV/
 $ xelatex -output-directory=examples examples/cv.tex
 ```
-This should generate `cv.pdf`
+This should generate [cv.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf)
 
 ## Using Docker
 The package can be installed using Docker. Please execute the following command on the terminal:
@@ -57,7 +57,9 @@ The package can be installed using Docker. Please execute the following command 
 $ cd path/to/Awesome-CV/
 $ docker run --rm --user $(id -u):$(id -g) -i -w "/doc" -v "$PWD":/doc texlive/texlive:latest make
 ```
-This should generate `coverletter.pdf` and `cv.pdf`.
+This should generate [coverletter.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter.pdf) and [cv.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf).
+
+
 
 **Checkout `examples` folder for more info.**
 
