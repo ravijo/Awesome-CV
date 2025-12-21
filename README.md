@@ -1,79 +1,80 @@
-<h1 align="center">
+<div align="center">
   <a href="https://github.com/posquit0/Awesome-CV" title="AwesomeCV Documentation">
-    <img alt="AwesomeCV" src="https://github.com/posquit0/Awesome-CV/raw/master/icon.png" width="200px" height="200px" />
+    <img alt="AwesomeCV" src="https://github.com/posquit0/Awesome-CV/raw/master/icon.png" width="140" height="140" />
   </a>
-  <br />
-  Awesome CV
-</h1>
+  <h1>Awesome CV</h1>
+  <p>LaTeX template for CV, Résumé, and Cover Letter with <b>.bib</b> bibliography support</p>
+  <p>
+    <a href="https://github.com/ravijo/Awesome-CV/actions"><img src="https://img.shields.io/github/workflow/status/ravijo/Awesome-CV/CI?label=build" alt="Build Status"></a>
+    <a href="https://github.com/ravijo/Awesome-CV/blob/master/LICENCE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+  </p>
+</div>
 
 
-<p align="center">
-  LaTeX template along with <em>.bib</em> formatting support
-</p>
+## What is Awesome CV?
+
+**Awesome CV** is a LaTeX template for creating a professional **CV (Curriculum Vitae)**, **Résumé**, or **Cover Letter**. Inspired by [Fancy CV](https://www.sharelatex.com/templates/cv-or-resume/fancy-cv), it features clean, semantic markup and is easy to customize for your needs.
 
 
+## What's Special About This Fork?
 
-# What is Awesome CV?
+This fork adds:
+- LaTeX bibliography (<em>.bib</em>) formatting support
+- Integrated icons for:
+  - Google Scholar
+  - ORCID
 
-**Awesome CV** is LaTeX template for a **CV(Curriculum Vitae)**, **Résumé** or **Cover Letter** inspired by [Fancy CV](https://www.sharelatex.com/templates/cv-or-resume/fancy-cv). It is easy to customize your own template, especially since it is really written by a clean, semantic markup.
-
-
-
-## What's Special about this Fork (Differences from the original repository)?
-
-This fork supports:
-* Latex bibliography <em>.bib</em> formatting support
-* Integrated icons such as 
-  * Google Scholar
-  * ORCID
 
 ## Preview
 
-### CV
+You can view a sample generated PDF [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf):
 
-You can see genereted PDF [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf)
-
-| Page. 1 | Page. 2 |
-|:---:|:---:|
-| [![CV](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-0.png)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf)  | [![CV](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-1.png)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf) |
+| Page 1 | Page 2 |
+|:------:|:------:|
+| [![CV Page 1](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-0.png)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf) | [![CV Page 2](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-1.png)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf) |
 
 
 ## Dependencies
-1. [TeX Live](https://www.tug.org/texlive): _Not required for Docker users_. See [using docker](#using-docker) section.
+
+- [TeX Live](https://www.tug.org/texlive) (not required for Docker users; see [Using Docker](#using-docker))
 
 
-### Usage
+## Usage
 
-Execute the following commnad on the terminal:
+To generate your CV, run the following commands in your terminal:
+
+```bash
+cd path/to/Awesome-CV/
+xelatex -output-directory=examples examples/cv.tex
 ```
-$ cd path/to/Awesome-CV/
-$ xelatex -output-directory=examples examples/cv.tex
-```
-This should generate [cv.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf)
+
+This will generate [cv.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf).
+
 
 ### Using Docker
-The package can be installed using Docker. Please execute the following command on the terminal:
+
+You can also build the documents using Docker (no TeX Live installation required):
+
+```bash
+cd path/to/Awesome-CV/
+docker run --rm --user $(id -u):$(id -g) -i -w "/doc" -v "$PWD":/doc texlive/texlive:latest make
 ```
-$ cd path/to/Awesome-CV/
-$ docker run --rm --user $(id -u):$(id -g) -i -w "/doc" -v "$PWD":/doc texlive/texlive:latest make
-```
-This should generate [coverletter.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter.pdf) and [cv.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf).
+
+This will generate [coverletter.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter.pdf) and [cv.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf).
+
+_See the `examples` folder for more details and sample files._
 
 
+## Tested Environment
 
-_Checkout `examples` folder for more info._
-
-<a name="pkgtest"></a>
-## Note on Test Configuration
-This package has been tested on the following environment configuration-
-
-| Name      | Value                                  |
-| ----------| -------------------------------------- |
-| OS        | Ubuntu 24.04.3 LTS (64-bit)            |
-| TeX Live  | 2025                                   |
-| XeTeX     | Version 3.141592653-2.6-0.999997       |
-| Docker    | Version 28.2.2                         |
+| Name      | Value                        |
+|-----------|-----------------------------|
+| OS        | Ubuntu 24.04.3 LTS (64-bit) |
+| TeX Live  | 2025                        |
+| XeTeX     | 3.141592653-2.6-0.999997    |
+| Docker    | 28.2.2                      |
 
 
-#### Issues (or Error Reporting)
-Please check [here](https://github.com/ravijo/Awesome-CV/issues) and create issues accordingly.
+## Issues & Support
+
+For bug reports or feature requests, please use the [GitHub Issues page](https://github.com/ravijo/Awesome-CV/issues).
