@@ -12,6 +12,13 @@
 </p>
 
 
+
+## What is Awesome CV?
+
+**Awesome CV** is LaTeX template for a **CV(Curriculum Vitae)**, **Résumé** or **Cover Letter** inspired by [Fancy CV](https://www.sharelatex.com/templates/cv-or-resume/fancy-cv). It is easy to customize your own template, especially since it is really written by a clean, semantic markup.
+
+
+
 ## What's Special about this Fork (Differences from the original repository)?
 
 This fork supports:
@@ -20,32 +27,52 @@ This fork supports:
   * Google Scholar
   * ORCID
 
-
-## What is Awesome CV?
-
-**Awesome CV** is LaTeX template for a **CV(Curriculum Vitae)**, **Résumé** or **Cover Letter** inspired by [Fancy CV](https://www.sharelatex.com/templates/cv-or-resume/fancy-cv). It is easy to customize your own template, especially since it is really written by a clean, semantic markup.
-
-
 ## Preview
 
 #### CV
 
-You can see [PDF](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv/cv.pdf)
+You can see [PDF](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf)
 
 | Page. 1 | Page. 2 |
 |:---:|:---:|
-| [![CV](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv/cv-0.png)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv/cv.pdf)  | [![CV](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv/cv-1.png)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv/cv.pdf) |
+| [![CV](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-0.png)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf)  | [![CV](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-1.png)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf) |
+
+
+## Dependencies
+1. [TeX Live](https://www.tug.org/texlive)
+    _Not required for Docker users_. See [using docker](#using-docker) section.
 
 
 #### Usage
 
-At a command prompt, run
+Execute the following commnad on the terminal:
 ```
-$ xelatex {your-cv}.tex
+$ cd path/to/Awesome-CV/
+$ xelatex -output-directory=examples examples/cv.tex
 ```
-This should result in the creation of ``{your-cv}.pdf``
+This should generate `cv.pdf`
+
+## Using Docker
+The package can be installed using Docker. Please execute the following command on the terminal:
+```
+$ cd path/to/Awesome-CV/
+$ docker run --rm --user $(id -u):$(id -g) -i -w "/doc" -v "$PWD":/doc texlive/texlive:latest make
+```
+This should generate `coverletter.pdf` and `cv.pdf`.
 
 **Checkout `examples` folder for more info.**
+
+<a name="pkgtest"></a>
+## Note on Test Configuration
+This package has been tested on the following environment configuration-
+
+| Name      | Value                                  |
+| ----------| -------------------------------------- |
+| OS        | Ubuntu 24.04.3 LTS (64-bit)            |
+| TeX Live  | 2025                                   |
+| XeTeX     | Version 3.141592653-2.6-0.999997       |
+| Docker    | Version 28.2.2                         |
+
 
 #### Issues (or Error Reporting)
 Please check [here](https://github.com/ravijo/Awesome-CV/issues) and create issues accordingly.
