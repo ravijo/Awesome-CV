@@ -6,22 +6,25 @@
   Awesome CV
 </h1>
 
+
 <p align="center">
   LaTeX template along with <em>.bib</em> formatting support
 </p>
+
 
 ## What's Special about this Fork (Differences from the original repository)?
 
 This fork supports:
 * Latex bibliography <em>.bib</em> formatting support
-* Integrated Academicons icons such as ORCID
+* Integrated icons such as 
+  * Google Scholar
+  * ORCID
 
-
-<br />
 
 ## What is Awesome CV?
 
 **Awesome CV** is LaTeX template for a **CV(Curriculum Vitae)**, **Résumé** or **Cover Letter** inspired by [Fancy CV](https://www.sharelatex.com/templates/cv-or-resume/fancy-cv). It is easy to customize your own template, especially since it is really written by a clean, semantic markup.
+
 
 ## Preview
 
