@@ -9,7 +9,7 @@
 % http://www.posquit0.com
 %
 % Updated By:
-% Ravi P. Joshi <ravi2008joshi@gmail.com>
+% Ravi P. Joshi <1439011+ravijo@users.noreply.github.com>
 % http://ravijoshi.xyz/
 %
 % Notes:
