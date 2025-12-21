@@ -39,8 +39,7 @@ You can see [PDF](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/exa
 
 
 ## Dependencies
-1. [TeX Live](https://www.tug.org/texlive)
-    _Not required for Docker users_. See [using docker](#using-docker) section.
+1. [TeX Live](https://www.tug.org/texlive): _Not required for Docker users_. See [using docker](#using-docker) section.
 
 
 #### Usage
