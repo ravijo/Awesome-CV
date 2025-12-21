@@ -2,11 +2,26 @@
   <a href="https://github.com/posquit0/Awesome-CV" title="AwesomeCV Documentation">
     <img alt="AwesomeCV" src="https://github.com/posquit0/Awesome-CV/raw/master/icon.png" width="140" height="140" />
   </a>
+  
   <h1>Awesome CV</h1>
-  <p>LaTeX template for CV, Résumé, and Cover Letter with <b>.bib</b> bibliography support</p>
+  
   <p>
-    <a href="https://github.com/ravijo/Awesome-CV/actions"><img src="https://github.com/ravijo/Awesome-CV/actions/workflows/main.yml/badge.svg" alt="Build Status"></a>
-    <a href="https://github.com/ravijo/Awesome-CV/blob/master/LICENCE"><img src="https://img.shields.io/badge/license-LPPL%201.3c-blue.svg" alt="License: LPPL 1.3c"></a>
+    LaTeX template for CV, Résumé, and Cover Letter with <b>.bib</b> bibliography support
+  </p>
+  
+  <p>
+    <a href="https://github.com/ravijo/Awesome-CV/actions/workflows/main.yml">
+      <img alt="Build Status" src="https://github.com/ravijo/Awesome-CV/actions/workflows/main.yml/badge.svg" />
+    </a>
+    <a href="https://github.com/ravijo/Awesome-CV/blob/master/LICENCE">
+      <img alt="License: LPPL 1.3c" src="https://img.shields.io/badge/license-LPPL%201.3c-blue.svg" />
+    </a>
+    <a href="https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf">
+      <img alt="Example CV" src="https://img.shields.io/badge/cv-pdf-green.svg" />
+    </a>
+    <a href="https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter.pdf">
+      <img alt="Example Coverletter" src="https://img.shields.io/badge/coverletter-pdf-green.svg" />
+    </a>
   </p>
 </div>
 
