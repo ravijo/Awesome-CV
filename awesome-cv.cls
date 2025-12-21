@@ -100,7 +100,6 @@
 \newcommand\setpdfauthor[1]{\setkeys{awesome-cv.cls}{pdfauthor=#1}}
 \newcommand\setpdftitle[1]{\setkeys{awesome-cv.cls}{pdftitle=#1}}
 % Needed to deal hyperlink
-<<<<<<< HEAD
 \RequirePackage[hidelinks,unicode]{hyperref}
 % Configure PDF author name and title
 \AtEndPreamble{
@@ -115,17 +114,6 @@
 \newbool{acvCompactCoverLetter}
 \setbool{acvCompactCoverLetter}{false}
 
-=======
-\RequirePackage[hidelinks,unicode,pdfpagelabels=false]{hyperref}
-\hypersetup{%
-  pdftitle={},
-  pdfauthor={},
-  pdfsubject={},
-  pdfkeywords={}
-}
-% Solves issues Warning: File `cv.out' has changed
-\RequirePackage{bookmark}
->>>>>>> upstream/master
 
 %-------------------------------------------------------------------------------
 %                Configuration for directory locations
@@ -133,14 +121,11 @@
 % Configure an optional directory location for fonts(default: 'fonts/')
 % Not required anymore but left in place for backward compatability.
 \newcommand*{\fontdir}[1][fonts/]{\def\@fontdir{#1}}
-<<<<<<< HEAD
 \fontdir
 
 % \newfontfamily{\AI}{Academicons}
 % src: https://tex.stackexchange.com/a/476473/49520
 \setfontfamily{\AI}{Academicons}
-=======
->>>>>>> upstream/master
 
 %-------------------------------------------------------------------------------
 %                Configuration for layout
@@ -205,32 +190,8 @@
 %-------------------------------------------------------------------------------
 %                Configuration for fonts
 %-------------------------------------------------------------------------------
-<<<<<<< HEAD
-% src: https://github.com/posquit0/Awesome-CV/issues/234
-%      https://tex.stackexchange.com/a/476473/49520
-% Set the FontAwesome font to be up-to-date.
-\setfontfamily\FA[Path=\@fontdir]{FontAwesome}
-% Set font for header (default is Roboto)
-\setfontfamily\headerfont[
-  Path=\@fontdir,
-  UprightFont=*-Regular,
-  ItalicFont=*-Italic,
-  BoldFont=*-Bold,
-  BoldItalicFont=*-BoldItalic,
-]{Roboto}
-
-\setfontfamily\headerfontlight[
-  Path=\@fontdir,
-  UprightFont=*-Thin,
-  ItalicFont=*-ThinItalic,
-  BoldFont=*-Medium,
-  BoldItalicFont=*-MediumItalic,
-]{Roboto}
-
-=======
 \newcommand*{\headerfont}{\roboto}
 \newcommand*{\headerfontlight}{\robotolight}
->>>>>>> upstream/master
 \newcommand*{\footerfont}{\sourcesanspro}
 \newcommand*{\bodyfont}{\sourcesanspro}
 \newcommand*{\bodyfontlight}{\sourcesansprolight}
@@ -376,14 +337,11 @@
 % Usage: \linkedin{<linked-in-nick>}
 \newcommand*{\linkedin}[1]{\def\@linkedin{#1}}
 
-<<<<<<< HEAD
-=======
 % Defines writer's orcid (optional)
 % Usage: \orcid{<orcid-num>}
 \newcommand*{\orcid}[1]{\def\@orcid{#1}}
 
 % Defines writer's twitter (optional)
->>>>>>> upstream/master
 % Usage: \twitter{<twitter handle>}
 \newcommand*{\twitter}[1]{\def\@twitter{#1}}
 
@@ -411,8 +369,6 @@
 % Usage: \xing{<xing name>}
 \newcommand*{\xing}[1]{\def\@xing{#1}}
 
-<<<<<<< HEAD
-=======
 % Defines writer's medium profile (optional)
 % Usage: \medium{<medium account>}
 \newcommand*{\medium}[1]{\def\@medium{#1}}
@@ -429,7 +385,6 @@
 % Usage: \telegram{<Telegram username>}
 \newcommand*{\telegram}[1]{\def\@telegram{#1}}
 
->>>>>>> upstream/master
 % Defines writer's google scholar profile (optional)
 % Usage: \googlescholar{<googlescholar userid>}{<googlescholar username>}
 % e.g.https://scholar.google.co.uk/citations?user=wpZDx1cAAAAJ
@@ -445,18 +400,8 @@
   }%
 }
 
-<<<<<<< HEAD
-% Defines ORCID
-% Usage: \orcid{0000-0003-1264-6100}
-\newcommand*{\orcid}[1]{\def\@orcidid{#1}}
-
-% Defines writer's twitter (optional)
-% Defines writer's extra informations (optional)
-% Usage: \extrainfo{<extra informations>}
-=======
 % Defines writer's extra information (optional)
 % Usage: \extrainfo{<extra information>}
->>>>>>> upstream/master
 \newcommand*{\extrainfo}[1]{\def\@extrainfo{#1}}
 
 % Defines writer's quote (optional)
@@ -681,8 +626,6 @@
           \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
           \href{https://www.xing.com/profile/\@xing}{\faSquareXing\acvHeaderIconSep\@xing}
         }%
-<<<<<<< HEAD
-=======
       \ifthenelse{\isundefined{\@medium}}%
         {}%
         {%
@@ -707,7 +650,6 @@
           \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
           \href{https://t.me/\@telegram}{\faTelegram\acvHeaderIconSep\@telegram}%
         }%
->>>>>>> upstream/master
       \ifthenelse{\isundefined{\@googlescholarid}}%
         {}%
         {%
@@ -842,18 +784,17 @@
 % Define a line of cv information(honor, award or something else)
 % Additionally, field separator instead of comma can be given as an optional argument
 % Usage: \cvhonor{<position>}{<title>}{<location>}{<date>}
-<<<<<<< HEAD
 \newcommand*{\cvhonor}[5][]{%
+  \honordatestyle{#5} &
+  \honorpositionstyle{#2}%
+  % Optional annotation
   \ifthenelse{\isempty{#1}{}}{%
-    \honordatestyle{#5} & \honorpositionstyle{#2}, \honortitlestyle{#3} & \honorlocationstyle{#4} \\
-   }%
-   {%
-     \honordatestyle{#5} & \honorpositionstyle{#2} {\fontsize{8pt}{1em}\bodyfontlight\color{text}#1} \honortitlestyle{#3} & \honorlocationstyle{#4} \\
-   }%
-=======
-\newcommand*{\cvhonor}[4]{%
-  \honordatestyle{#4} & \honorpositionstyle{#1}\ifempty{#2}{}{,} \honortitlestyle{#2} & \honorlocationstyle{#3} \\
->>>>>>> upstream/master
+    {\fontsize{8pt}{1em}\bodyfontlight\color{text}#1}%
+  }{}%
+  % Comma only if title is not empty
+  \ifthenelse{\isempty{#3}{}}{%
+  }{, \honortitlestyle{#3}} &
+  \honorlocationstyle{#4} \\
 }
 
 % Define an environment for cvskill
