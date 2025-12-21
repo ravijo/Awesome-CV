@@ -5,8 +5,8 @@
   <h1>Awesome CV</h1>
   <p>LaTeX template for CV, Résumé, and Cover Letter with <b>.bib</b> bibliography support</p>
   <p>
-    <a href="https://github.com/ravijo/Awesome-CV/actions"><img src="https://img.shields.io/github/workflow/status/ravijo/Awesome-CV/CI?label=build" alt="Build Status"></a>
-    <a href="https://github.com/ravijo/Awesome-CV/blob/master/LICENCE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+    <a href="https://github.com/ravijo/Awesome-CV/actions"><img src="https://github.com/ravijo/Awesome-CV/actions/workflows/main.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://github.com/ravijo/Awesome-CV/blob/master/LICENCE"><img src="https://img.shields.io/badge/license-LPPL%201.3c-blue.svg" alt="License: LPPL 1.3c"></a>
   </p>
 </div>
 
