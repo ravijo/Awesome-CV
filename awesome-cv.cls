@@ -86,6 +86,9 @@
 \RequirePackage[default,opentype]{sourcesanspro}
 % Needed for the photo ID
 \RequirePackage[skins]{tcolorbox}
+% Needed to draw photo shapes
+\RequirePackage{tikz}
+\usetikzlibrary{backgrounds}
 % Needed to deal a paragraphs
 \RequirePackage{parskip}
 % Needed for Google Scholar and ORCID icon
@@ -110,18 +113,12 @@
     pdfkeywords={}
   }
 }
+% Solves issues Warning: File `cv.out' has changed
+\RequirePackage{bookmark}
 % Boolean value to switch compact theme for cover letter
 \newbool{acvCompactCoverLetter}
 \setbool{acvCompactCoverLetter}{false}
 
-
-%-------------------------------------------------------------------------------
-%                Configuration for directory locations
-%-------------------------------------------------------------------------------
-% Configure an optional directory location for fonts(default: 'fonts/')
-% Not required anymore but left in place for backward compatability.
-% \newcommand*{\fontdir}[1][fonts/]{\def\@fontdir{#1}}
-% \fontdir
 
 %-------------------------------------------------------------------------------
 %                Configuration for layout
@@ -162,6 +159,7 @@
 \colorlet{graytext}{gray}
 \colorlet{lighttext}{lightgray}
 \colorlet{sectiondivider}{gray}
+\colorlet{lightdivider}{gray!30}
 % Awesome colors
 \definecolor{awesome-emerald}{HTML}{00A388}
 \definecolor{awesome-skyblue}{HTML}{0395DE}
@@ -223,7 +221,6 @@
 \newcommand*{\subdescriptionstyle}[1]{{\fontsize{8pt}{1em}\bodyfontlight\upshape\color{text} #1}}
 
 % For elements of honor
-% \newcommand*{\honortitlestyle}[1]{{\fontsize{9pt}{1em}\bodyfont\color{graytext} #1}}
 \newcommand*{\honortitlestyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\color{text} #1}}
 \newcommand*{\honorpositionstyle}[1]{{\fontsize{9pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
 \newcommand*{\honordatestyle}[1]{{\fontsize{9pt}{1em}\bodyfont\color{graytext} #1}}
@@ -237,7 +234,6 @@
 \newcommand*{\lettersectionstyle}[1]{{\fontsize{14pt}{1em}\bodyfont\bfseries\color{text}\@sectioncolor #1}}
 \newcommand*{\recipientaddressstyle}[1]{{\fontsize{9pt}{1em}\bodyfont\scshape\color{graytext} #1}}
 \newcommand*{\recipienttitlestyle}[1]{{\fontsize{11pt}{1em}\bodyfont\bfseries\color{darktext} #1}}
-%\newcommand*{\lettertitlestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\bfseries\color{darktext} \underline{#1}}}
 \newcommand*{\lettertitlestyle}[1]{{\fontsize{10pt}{1em}\bodyfontlight\bfseries\color{darktext} #1}}
 \newcommand*{\letterdatestyle}[1]{{\fontsize{9pt}{1em}\bodyfontlight\slshape\color{graytext} #1}}
 \newcommand*{\lettertextstyle}{\fontsize{10pt}{1.4em}\bodyfontlight\upshape\color{graytext}}
@@ -283,7 +279,7 @@
 \newcommand*{\address}[1]{\def\@address{#1}}
 
 % Define writer's position
-% Usage: \name{<position>}
+% Usage: \position{<position>}
 \newcommand*{\position}[1]{\def\@position{#1}}
 
 % Defines writer's mobile (optional)
@@ -300,7 +296,7 @@
 }
 
 % Defines writer's email (optional)
-% Usage: \email{<email adress>}
+% Usage: \email{<email address>}
 \newcommand*{\email}[1]{\def\@email{#1}}
 
 % Defines writer's date of birth (optional)
@@ -456,6 +452,11 @@
 \newcommand{\acvSectionTopSkip}{3mm}
 \newcommand{\acvSectionContentTopSkip}{2.5mm}
 
+% Table column widths
+\newcommand{\acvDateColumnWidth}{4.5cm}
+\newcommand{\acvHonorDateWidth}{1.5cm}
+\newcommand{\acvHonorLocationWidth}{2.5cm}
+\newlength{\cvskillwidth}
 
 %-------------------------------------------------------------------------------
 %                Commands for utilities
@@ -470,6 +471,12 @@
 
 % Use to execute conditional statements by checking empty string
 \newcommand*{\ifempty}[3]{\ifthenelse{\isempty{#1}}{#2}{#3}}
+
+% Helper macro for social links in header
+\newcommand*{\acvHeaderSocialItem}[1]{%
+  \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+  #1%
+}
 
 
 %-------------------------------------------------------------------------------
@@ -528,135 +535,112 @@
       \ifthenelse{\isundefined{\@email}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{mailto:\@email}{\faEnvelope\acvHeaderIconSep\@email}%
+          \acvHeaderSocialItem{\href{mailto:\@email}{\faEnvelope\acvHeaderIconSep\@email}}%
         }%
       \ifthenelse{\isundefined{\@dateofbirth}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          % \mbox prevents wrapping of elements%
-          \mbox{\faCakeCandles\acvHeaderIconSep\@dateofbirth}%
+          \acvHeaderSocialItem{\mbox{\faCakeCandles\acvHeaderIconSep\@dateofbirth}}%
         }%
       \ifthenelse{\isundefined{\@homepage}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{http://\@homepage}{\faHouseChimney\acvHeaderIconSep\@homepage}%
+          \acvHeaderSocialItem{\href{http://\@homepage}{\faHouseChimney\acvHeaderIconSep\@homepage}}%
         }%
       \ifthenelse{\isundefined{\@github}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://github.com/\@github}{\faSquareGithub\acvHeaderIconSep\@github}%
+          \acvHeaderSocialItem{\href{https://github.com/\@github}{\faSquareGithub\acvHeaderIconSep\@github}}%
         }%
       \ifthenelse{\isundefined{\@gitlab}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://gitlab.com/\@gitlab}{\faGitlab\acvHeaderIconSep\@gitlab}%
+          \acvHeaderSocialItem{\href{https://gitlab.com/\@gitlab}{\faGitlab\acvHeaderIconSep\@gitlab}}%
         }%
       \ifthenelse{\isundefined{\@bitbucket}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://bitbucket.com/\@bitbucket}{\faBitbucket\acvHeaderIconSep\@bitbucket}%
+          \acvHeaderSocialItem{\href{https://bitbucket.com/\@bitbucket}{\faBitbucket\acvHeaderIconSep\@bitbucket}}%
         }%
       \ifthenelse{\isundefined{\@stackoverflowid}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://stackoverflow.com/users/\@stackoverflowid}{\faStackOverflow\acvHeaderIconSep\@stackoverflowname}%
+          \acvHeaderSocialItem{\href{https://stackoverflow.com/users/\@stackoverflowid}{\faStackOverflow\acvHeaderIconSep\@stackoverflowname}}%
         }%
       \ifthenelse{\isundefined{\@linkedin}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://www.linkedin.com/in/\@linkedin}{\faLinkedin\acvHeaderIconSep\@linkedin}%
+          \acvHeaderSocialItem{\href{https://www.linkedin.com/in/\@linkedin}{\faLinkedin\acvHeaderIconSep\@linkedin}}%
         }%
       \ifthenelse{\isundefined{\@orcid}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://orcid.org/\@orcid}{\faOrcid\acvHeaderIconSep{ORCID}}%
+          \acvHeaderSocialItem{\href{https://orcid.org/\@orcid}{\faOrcid\acvHeaderIconSep{ORCID}}}%
         }%
       \ifthenelse{\isundefined{\@twitter}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://twitter.com/\@twitter}{\faTwitter\acvHeaderIconSep\@twitter}%
+          \acvHeaderSocialItem{\href{https://twitter.com/\@twitter}{\faTwitter\acvHeaderIconSep\@twitter}}%
         }%
       \ifthenelse{\isundefined{\@x}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://x.com/\@x}{\faXTwitter\acvHeaderIconSep\@x}%
+          \acvHeaderSocialItem{\href{https://x.com/\@x}{\faXTwitter\acvHeaderIconSep\@x}}%
         }%
       \ifthenelse{\isundefined{\@mastodonname}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://\@mastodoninstance/@\@mastodonname}{\faMastodon\acvHeaderIconSep\@mastodonname}%
+          \acvHeaderSocialItem{\href{https://\@mastodoninstance/@\@mastodonname}{\faMastodon\acvHeaderIconSep\@mastodonname}}%
         }%
       \ifthenelse{\isundefined{\@skype}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \faSkype\acvHeaderIconSep\@skype%
+          \acvHeaderSocialItem{\faSkype\acvHeaderIconSep\@skype}%
         }%
       \ifthenelse{\isundefined{\@reddit}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://www.reddit.com/user/\@reddit}{\faReddit\acvHeaderIconSep\@reddit}%
+          \acvHeaderSocialItem{\href{https://www.reddit.com/user/\@reddit}{\faReddit\acvHeaderIconSep\@reddit}}%
         }%
       \ifthenelse{\isundefined{\@researchgate}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://www.researchgate.net/profile/\@researchgate}{\faResearchgate\acvHeaderIconSep\@researchgate}%
+          \acvHeaderSocialItem{\href{https://www.researchgate.net/profile/\@researchgate}{\faResearchgate\acvHeaderIconSep\@researchgate}}%
         }%
       \ifthenelse{\isundefined{\@xing}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://www.xing.com/profile/\@xing}{\faSquareXing\acvHeaderIconSep\@xing}
+          \acvHeaderSocialItem{\href{https://www.xing.com/profile/\@xing}{\faSquareXing\acvHeaderIconSep\@xing}}%
         }%
       \ifthenelse{\isundefined{\@medium}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://medium.com/@\@medium}{\faMedium\acvHeaderIconSep\@medium}%
+          \acvHeaderSocialItem{\href{https://medium.com/@\@medium}{\faMedium\acvHeaderIconSep\@medium}}%
         }%
       \ifthenelse{\isundefined{\@kaggle}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://kaggle.com/\@kaggle}{\faKaggle\acvHeaderIconSep\@kaggle}%
+          \acvHeaderSocialItem{\href{https://kaggle.com/\@kaggle}{\faKaggle\acvHeaderIconSep\@kaggle}}%
         }%
       \ifthenelse{\isundefined{\@hackerrank}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://www.hackerrank.com/\@hackerrank}{\faHackerrank\acvHeaderIconSep\@hackerrank}%
+          \acvHeaderSocialItem{\href{https://www.hackerrank.com/\@hackerrank}{\faHackerrank\acvHeaderIconSep\@hackerrank}}%
         }%
       \ifthenelse{\isundefined{\@telegram}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://t.me/\@telegram}{\faTelegram\acvHeaderIconSep\@telegram}%
+          \acvHeaderSocialItem{\href{https://t.me/\@telegram}{\faTelegram\acvHeaderIconSep\@telegram}}%
         }%
       \ifthenelse{\isundefined{\@googlescholarid}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \href{https://scholar.google.com/citations?user=\@googlescholarid}{\faGraduationCap\acvHeaderIconSep\@googlescholarname}%
+          \acvHeaderSocialItem{\href{https://scholar.google.com/citations?user=\@googlescholarid}{\faGraduationCap\acvHeaderIconSep\@googlescholarname}}%
         }%
       \ifthenelse{\isundefined{\@extrainfo}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
-          \@extrainfo%
+          \acvHeaderSocialItem{\@extrainfo}%
         }%
     } \\[\acvHeaderAfterSocialSkip]%
     \ifthenelse{\isundefined{\@quote}}%
@@ -719,7 +703,7 @@
   \vspace{-2.0mm}
   \setlength\tabcolsep{0pt}
   \setlength{\extrarowheight}{0pt}
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - \acvDateColumnWidth} R{\acvDateColumnWidth}}
     \ifempty{#2#3}
       {\entrypositionstyle{#1} & \entrydatestyle{#4} \\}
       {\entrytitlestyle{#2} & \entrylocationstyle{#3} \\
@@ -741,7 +725,7 @@
 \newcommand*{\cvsubentry}[4]{%
   \setlength\tabcolsep{0pt}
   \setlength{\extrarowheight}{0pt}
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - \acvDateColumnWidth} R{\acvDateColumnWidth}}
     \setlength\leftskip{0.2cm}
     \subentrytitlestyle{#2} & \ifthenelse{\equal{#1}{}}
       {\subentrydatestyle{#3}}{}
@@ -755,19 +739,14 @@
 }
 
 % Define an environment for cvhonor
-\newenvironment{cvhonors}[1][]{%
+\newenvironment{cvhonors}[1][\acvHonorLocationWidth]{%
   \vspace{\acvSectionContentTopSkip}
   \vspace{-2mm}
   \begin{center}
   \setlength\tabcolsep{0pt}
   \setlength{\extrarowheight}{0pt}
-  \ifthenelse{\isempty{#1}{}}{%
-    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} C{1.5cm} L{\textwidth - 4.0cm} R{2.5cm}}
-    }%
-    {%
-    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} C{1.5cm} L{\textwidth - 1.5cm} R{#1}}
-    }%
-  }{%
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} C{\acvHonorDateWidth} L{\textwidth - \acvHonorDateWidth - #1} R{#1}}
+}{%
   \end{tabular*}
   \end{center}
 }
@@ -778,11 +757,12 @@
   \honordatestyle{#5} &
   \honorpositionstyle{#2}%
   % Optional annotation
-  \ifthenelse{\isempty{#1}{}}{%
+  \ifthenelse{\equal{#1}{}}{%
+  }{%
     {\fontsize{8pt}{1em}\bodyfontlight\color{text}#1}%
-  }{}%
+  }%
   % Comma only if title is not empty
-  \ifthenelse{\isempty{#3}{}}{%
+  \ifthenelse{\equal{#3}{}}{%
   }{, \honortitlestyle{#3}} &
   \honorlocationstyle{#4} \\
 }
@@ -794,7 +774,8 @@
   \begin{center}
     \setlength\tabcolsep{1ex}
     \setlength{\extrarowheight}{0pt}
-    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} r L{\textwidth * \real{0.8}}}
+    \setlength{\cvskillwidth}{\dimexpr\textwidth-3cm\relax}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} r L{\cvskillwidth}}
 }{%
     \end{tabular*}
   \end{center}
@@ -845,7 +826,7 @@
   \ifbool{acvCompactCoverLetter}{}{\vspace{8.4mm}}
   \setlength\tabcolsep{0pt}
   \setlength{\extrarowheight}{0pt}
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - 4.5cm} R{4.5cm}}
+  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - \acvDateColumnWidth} R{\acvDateColumnWidth}}
     \recipienttitlestyle{\@recipientname} & \letterdatestyle{\@letterdate}
   \end{tabular*}
   \begin{singlespace}
@@ -853,8 +834,7 @@
   \end{singlespace}
   \ifthenelse{\isundefined{\@lettertitle}}
     {}
-    % {\lettertitlestyle{\@lettertitle} \\ {\color{gray!30}\vhrulefill{0.9pt} \\ }}
-    {\lettertitlestyle{\@lettertitle}  \vspace{-3mm} \\ {\color{gray!30}\vhrulefill{0.9pt} \\ }}
+    {\lettertitlestyle{\@lettertitle}  \vspace{-3mm} \\ {\color{lightdivider}\vhrulefill{0.9pt} \\ }}
   \hspace{-2pt}\lettertextstyle{\@letteropening}
 }
 
@@ -875,24 +855,22 @@
 %-------------------------------------------------------------------------------
 %                Bibliography
 %-------------------------------------------------------------------------------
-%\RequirePackage[style=verbose, maxnames=99, sorting=ydnt]{biblatex}
-\RequirePackage[ % BibLaTeX
-  sorting=ydnt, % Sorts entries by year (descending order), name, title
+\RequirePackage[
+  sorting=ydnt,
   style=verbose,
   doi=true,
   isbn=true,
   url=true,
   eprint=true,
-  backref=false, % include back references in bibliography
-  maxcitenames=3, % affects only the citations in the document body
-  maxbibnames=99, % affects only the bibliography, pass 99 to print all
+  backref=false,
+  maxcitenames=3,
+  maxbibnames=99,
   hyperref=true,
   block=none,
-  backend=biber % {Options: bibtex, biber}
-  ]{biblatex}
+  backend=biber
+]{biblatex}
 
 % Avoid splitting entries across page break (only for 3 or fewer lines)
-% Tip: http://tex.stackexchange.com/a/51261
 \AtBeginEnvironment{thebibliography}{%
   \clubpenalty10000
   \@clubpenalty \clubpenalty
@@ -908,19 +886,19 @@
 
 \newbibmacro*{doi+isbn+url}{%
   \iffieldundef{doi}%
-  {% check isbn if bibtex entry does not contain doi
+  {%
     \iffieldundef{isbn}%
-    {% check url if bibtex entry does not contain isbn
+    {%
       \iffieldundef{url}%
-      {}% do nothing because this bibtex entry does not contain doi, isbn or url
-      {% print url because this bibtex entry does not contain doi or isbn
+      {}%
+      {%
         \printfield{url}%
       }
-    }{% print url because this bibtex entry does not contain doi
+    }{%
       \printfield{isbn}%
     }
   }
-  {% print url because this bibtex entry contain doi
+  {%
     \printfield{doi}%
   }
 }
@@ -939,9 +917,6 @@
     \printfield{pages}%
     \newunit%
     \printlist{publisher}%
-    %\printfield{publisher}%
-    %\setunit*{\addcomma\space}%
-    %\printfield{year}%
     \par%
     {%
       \setlength\tabcolsep{0pt}
@@ -965,17 +940,12 @@
   \newblock%
   {%
     \fontsize{8pt}{1em}\bodyfontlight\color{graytext}%
-    %\printfield{booktitle}%
-    %\setunit{\addcomma\space}%
-    %\printfield{year}%
-    %\setunit{\addcomma\space}%
-    %\printlist{location}%
     \setlength\tabcolsep{0pt}
     \setlength{\extrarowheight}{0pt}
     \begin{tabular*}{\textwidth - 0.4cm}{@{\extracolsep{\fill}} L{\textwidth - 5cm} R{4cm}}
       \printfield{booktitle}%
         &%
-      \conflocationstyle{\printlist{location}}\\% next line
+      \conflocationstyle{\printlist{location}}\\%
       \usebibmacro{doi+isbn+url}%
         &%
       \printfield{year}%
@@ -1043,7 +1013,6 @@
   \par\vspace{0.3\baselineskip}
 }
 
-% New syntax for flexible backend (BibLaTeX > v3.3)
 \DeclareNameFormat{author}{%
   \fontsize{9pt}{1em}\bodyfont%
   \renewcommand*{\multinamedelim}{\addcomma\addspace}%
