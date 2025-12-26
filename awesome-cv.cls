@@ -31,11 +31,15 @@
 
 %-------------------------------------------------------------------------------
 %                Class options
-%
-% (need to be done before the external package loading, for example because
-% we need \paperwidth, \paperheight and \@ptsize to be defined before loading
-% geometry and fancyhdr)
 %-------------------------------------------------------------------------------
+% Boolean for Japanese language support
+\newif\if@japanese
+\@japanesefalse
+
+% Declare Japanese language option
+\DeclareOption{ja}{\@japanesetrue}
+\DeclareOption{japanese}{\@japanesetrue}
+
 % Options for draft or final
 \DeclareOption{draft}{\setlength\overfullrule{5pt}}
 \DeclareOption{final}{\setlength\overfullrule{0pt}}
@@ -76,6 +80,33 @@
 \RequirePackage[quiet]{fontspec}
 % To support LaTeX quoting style
 \defaultfontfeatures{Ligatures=TeX}
+% Conditional Japanese language support
+\if@japanese
+  \RequirePackage{xeCJK}
+  %
+  % Define default Japanese fonts (Harano Aji)
+  \newcommand*{\@cjkmainfont}{HaranoAjiMincho-Regular}
+  \newcommand*{\@cjksansfont}{HaranoAjiGothic-Regular} 
+  %
+  % User-customizable command to set Japanese fonts
+  % Usage: \setjpfont{<mincho/serif font>}{<gothic/sans font>}
+  \newcommand*{\setjpfont}[2]{%
+    \renewcommand*{\@cjkmainfont}{#1}%
+    \renewcommand*{\@cjksansfont}{#2}%
+  }
+  %
+  % Apply fonts and redefine date format at begin document
+  \AtBeginDocument{%
+    \setCJKmainfont{\@cjkmainfont}
+    \setCJKsansfont{\@cjksansfont}
+    \setCJKmonofont{\@cjksansfont}
+    %
+    % Redefine \today to display date in Japanese format
+    \renewcommand{\today}{%
+      {\number\year}年{\number\month}月{\number\day}日%
+    }
+  }
+\fi
 % Needed to manage math fonts
 \RequirePackage{unicode-math}
 % Reference last page for Page N of M type footers
