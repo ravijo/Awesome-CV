@@ -51,7 +51,12 @@ You can view a sample generated PDF [here](https://raw.githubusercontent.com/rav
 
 You can view a sample cv in Japanese language [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp.pdf):
 
+| Page 1 | Page 2 |
+|:------:|:------:|
+| [![CV Page 1](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp-0.jpg)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp.pdf) | [![CV Page 2](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp-1.jpg)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp.pdf) |
+
 You can view a sample coverletter in Japanese language [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter-jp.pdf):
+
 
 ## Dependencies
 
