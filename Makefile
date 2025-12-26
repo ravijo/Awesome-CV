@@ -4,11 +4,13 @@ CC = xelatex
 BIB = biber
 EXAMPLES_DIR = examples
 CV_DIR = examples/cv
+CV_JP_DIR = examples/cv-jp
 CV_SRCS = $(shell find $(CV_DIR) -name '*.tex')
+CV_JP_SRCS = $(shell find $(CV_JP_DIR) -name '*.tex')
 
 all: examples clean
 
-examples: $(foreach x, coverletter cv, $x.pdf)
+examples: $(foreach x, coverletter coverletter-jp cv cv-jp, $x.pdf)
 
 cv.pdf: $(EXAMPLES_DIR)/cv.tex $(CV_SRCS)
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
@@ -16,7 +18,16 @@ cv.pdf: $(EXAMPLES_DIR)/cv.tex $(CV_SRCS)
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
 
+cv-jp.pdf: $(EXAMPLES_DIR)/cv-jp.tex $(CV_JP_SRCS)
+	$(CC) -output-directory=$(EXAMPLES_DIR) $<
+	$(BIB) $(EXAMPLES_DIR)/cv-jp
+	$(CC) -output-directory=$(EXAMPLES_DIR) $<
+	$(CC) -output-directory=$(EXAMPLES_DIR) $<
+
 coverletter.pdf: $(EXAMPLES_DIR)/coverletter.tex
+	$(CC) -output-directory=$(EXAMPLES_DIR) $<
+
+coverletter-jp.pdf: $(EXAMPLES_DIR)/coverletter-jp.tex
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
 
 clean:
