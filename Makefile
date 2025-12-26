@@ -1,36 +1,29 @@
-.PHONY: examples clean
-
 CC = xelatex
 BIB = biber
 EXAMPLES_DIR = examples
-CV_DIR = examples/cv
-CV_JP_DIR = examples/cv-jp
-CV_SRCS = $(shell find $(CV_DIR) -name '*.tex')
-CV_JP_SRCS = $(shell find $(CV_JP_DIR) -name '*.tex')
+CV_SRCS = $(shell find $(EXAMPLES_DIR)/cv* -name '*.tex')
+
+# Output PDFs
+CV_PDFS = cv.pdf cv-jp.pdf
+COVER_LETTER_PDFS = coverletter.pdf coverletter-jp.pdf
+ALL_PDFS = $(CV_PDFS) $(COVER_LETTER_PDFS)
 
 all: examples clean
 
-examples: $(foreach x, coverletter coverletter-jp cv cv-jp, $x.pdf)
+examples: $(ALL_PDFS)
 
-cv.pdf: $(EXAMPLES_DIR)/cv.tex $(CV_SRCS)
+# CV documents (need bibliography compilation)
+$(CV_PDFS): %.pdf: $(EXAMPLES_DIR)/%.tex $(CV_SRCS)
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
-	$(BIB) $(EXAMPLES_DIR)/cv
-	$(CC) -output-directory=$(EXAMPLES_DIR) $<
-	$(CC) -output-directory=$(EXAMPLES_DIR) $<
-
-cv-jp.pdf: $(EXAMPLES_DIR)/cv-jp.tex $(CV_JP_SRCS)
-	$(CC) -output-directory=$(EXAMPLES_DIR) $<
-	$(BIB) $(EXAMPLES_DIR)/cv-jp
+	$(BIB) $(EXAMPLES_DIR)/$*
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
 
-coverletter.pdf: $(EXAMPLES_DIR)/coverletter.tex
-	$(CC) -output-directory=$(EXAMPLES_DIR) $<
-
-coverletter-jp.pdf: $(EXAMPLES_DIR)/coverletter-jp.tex
+# Cover letters (simple compilation)
+$(COVER_LETTER_PDFS): %.pdf: $(EXAMPLES_DIR)/%.tex
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
 
 clean:
 	@for ext in aux bbl bcf blg log out run.xml; do \
-		rm -rf $(EXAMPLES_DIR)/*.$${ext}; \
+		rm -f $(EXAMPLES_DIR)/*.$${ext}; \
 	done
