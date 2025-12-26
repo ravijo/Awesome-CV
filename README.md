@@ -6,7 +6,7 @@
   <h1>Awesome CV</h1>
   
   <p>
-    LaTeX template for CV, Résumé, and Cover Letter with <b>.bib</b> bibliography support
+    LaTeX template for CV, Résumé, and Cover Letter with <b>.bib</b> bibliography, and Japanese language support
   </p>
   
   <p>
@@ -35,6 +35,7 @@
 
 This fork adds:
 - LaTeX bibliography (<em>.bib</em>) formatting support
+- Japanese language support
 - Integrated icons for:
   - Google Scholar
   - ORCID
@@ -48,6 +49,9 @@ You can view a sample generated PDF [here](https://raw.githubusercontent.com/rav
 |:------:|:------:|
 | [![CV Page 1](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-0.jpg)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf) | [![CV Page 2](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-1.jpg)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf) |
 
+You can view a sample cv in Japanese language [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp.pdf):
+
+You can view a sample coverletter in Japanese language [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter-jp.pdf):
 
 ## Dependencies
 
