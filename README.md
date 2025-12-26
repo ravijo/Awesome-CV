@@ -75,6 +75,15 @@ cd path/to/Awesome-CV/
 docker run --rm --user $(id -u):$(id -g) -i -w "/doc" -v "$PWD":/doc texlive/texlive:latest make
 ```
 
+#### Debug
+
+You can obtain interactive shell access inside Docker for debugging purposes:
+```bash
+cd path/to/Awesome-CV/
+docker run --rm --user $(id -u):$(id -g) -it -w "/doc" -v "$PWD":/doc texlive/texlive:latest bash
+xelatex -output-directory=examples examples/cv.tex
+```
+
 This will generate [coverletter.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter.pdf) and [cv.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf).
 
 _See the `examples` folder for more details and sample files._
