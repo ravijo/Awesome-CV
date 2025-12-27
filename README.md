@@ -1,12 +1,13 @@
 <div align="center">
-  <a href="https://github.com/posquit0/Awesome-CV" title="AwesomeCV Documentation">
-    <img alt="AwesomeCV" src="https://github.com/posquit0/Awesome-CV/raw/master/icon.png" width="140" height="140" />
+  <a href="https://github.com/ravijo/Awesome-CV" title="AwesomeCV Documentation">
+    <img alt="AwesomeCV" src="https://github.com/ravijo/Awesome-CV/raw/master/icon.png" width="140" height="140" />
   </a>
   
   <h1>Awesome CV</h1>
   
   <p>
-    LaTeX template for CV, Résumé, and Cover Letter with <b>.bib</b> bibliography, and Japanese language support
+    <strong>Professional LaTeX template for CV, Résumé, and Cover Letter</strong><br>
+    With bibliography (<b>.bib</b>) support and Japanese language integration
   </p>
   
   <p>
@@ -19,91 +20,195 @@
     <a href="https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf">
       <img alt="Example CV" src="https://img.shields.io/badge/cv-pdf-green.svg" />
     </a>
-    <a href="https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter.pdf">
-      <img alt="Example Coverletter" src="https://img.shields.io/badge/coverletter-pdf-green.svg" />
+    <a href="https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter-pdf-green.svg" />
     </a>
   </p>
 </div>
 
+---
 
-## What is Awesome CV?
+## 📋 Table of Contents
 
-**Awesome CV** is a LaTeX template for creating a professional **CV (Curriculum Vitae)**, **Résumé**, or **Cover Letter**. Inspired by [Fancy CV](https://www.sharelatex.com/templates/cv-or-resume/fancy-cv), it features clean, semantic markup and is easy to customize for your needs.
+- [Overview](#-overview)
+- [Key Features](#-key-features)
+- [Preview](#-preview)
+- [Quick Start](#-quick-start)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Japanese Language Support](#-japanese-language-support)
+- [Docker Usage](#-docker-usage)
+- [Environment](#-environment)
+- [Contributing](#-contributing)
+- [License & Support](#-license--support)
 
+---
 
-## What's Special About This Fork?
+## 🎯 Overview
 
-This fork adds:
-- LaTeX bibliography (<em>.bib</em>) formatting support
-- Japanese language support
-- Integrated icons for:
-  - Google Scholar
-  - ORCID
+**Awesome CV** is a professional LaTeX template for creating polished CVs (Curriculum Vitae), Résumés, and Cover Letters. Inspired by [Fancy CV](https://www.sharelatex.com/templates/cv-or-resume/fancy-cv), it features clean, semantic markup that's easy to customize for your specific needs.
 
+### What Makes This Fork Special?
 
-## Preview
+This enhanced fork extends the original template with:
 
-### English Language (default)
+- **📚 Bibliography Support** - Integrated `.bib` file formatting for academic publications
+- **🇯🇵 Japanese Language** - Full Japanese language support with multiple font options
+- **🎓 Academic Icons** - Built-in icons for Google Scholar and ORCID profiles
+- **🐳 Docker Support** - Build without installing TeX Live locally
 
-You can view a sample generated PDF [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf):
+---
+
+## ✨ Key Features
+
+- **Professional Design** - Clean, modern layout that stands out
+- **Easy Customization** - Semantic markup for straightforward editing
+- **Multi-language** - Support for English, Japanese, and other languages
+- **Bibliography Ready** - Seamlessly integrate your publications list
+- **Multiple Formats** - Generate CV, résumé, or cover letter from one template
+- **Docker Compatible** - No local TeX installation required
+- **Open Source** - Free to use and modify under LPPL 1.3c license
+
+---
+
+## 👀 Preview
+
+### English Version
+
+View the complete [English CV sample (PDF)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf) | [English Cover Letter (PDF)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter.pdf)
 
 | Page 1 | Page 2 |
 |:------:|:------:|
 | [![CV Page 1](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-0.jpg)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf) | [![CV Page 2](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-1.jpg)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf) |
 
-### Japanese Language
+### Japanese Version
 
-You can view a sample cv in Japanese language [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp.pdf):
+View the complete [Japanese CV sample (PDF)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp.pdf) | [Japanese Cover Letter (PDF)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter-jp.pdf)
 
-| Page 1 | Page 2 |
+| CV Page 1 | CV Page 2 |
 |:------:|:------:|
 | [![CV Page 1](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp-0.jpg)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp.pdf) | [![CV Page 2](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp-1.jpg)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp.pdf) |
 
-You can view a sample coverletter in Japanese language [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter-jp.pdf):
+---
 
+## 🚀 Quick Start
 
-## Dependencies
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/ravijo/Awesome-CV.git
+   cd Awesome-CV
+   ```
 
-- [TeX Live](https://www.tug.org/texlive) (not required for Docker users; see [Using Docker](#using-docker))
+2. **Edit your information**
+   - Modify `examples/cv.tex` with your details
+   - Update sections in the `examples/` folder as needed
 
+3. **Build your CV**
+   ```bash
+   xelatex -output-directory=examples examples/cv.tex
+   ```
+   The `xelatex` is included with TeX Live. For more info, please see [Installation](#installation)
 
-## Japanese Language
+4. **Find your PDF**
+   - Your CV will be generated as `examples/cv.pdf`
 
-To use Japanese language, simply provide `ja` to the `documentclass` as shown below:
-```tex
-\documentclass[11pt, a4paper, ja]{awesome-cv}
-%
-% By default, this template uses Harano Aji as the Japanese font.
-% You can switch to a different Japanese font if needed.
-% For example, uncomment the line below to use the classic (legacy) IPA fonts:
-% \setjpfont{IPAMincho}{IPAGothic}
-%
-% Or use Noto fonts (if installed)
-% \setjpfont{Noto Serif CJK JP}{Noto Sans CJK JP}
+---
+
+## 📦 Installation
+
+### Requirements
+
+- **TeX Live** (recommended) - Full LaTeX distribution
+- **XeTeX** - Included with TeX Live
+- **Git** - For cloning the repository
+
+TeX Live Installation is not required for Docker users. Please see [Docker Usage](#docker-usage)
+
+### TeX Live Installation
+
+**Ubuntu/Debian:**
+```bash
+sudo apt-get install texlive-full
 ```
-_See the `examples` folder for more details and sample files._
 
+**macOS (with Homebrew):**
+```bash
+brew install --cask mactex
+```
 
-## Usage
+**Windows:**
+Download and install from [tug.org/texlive](https://www.tug.org/texlive/)
 
-To generate your CV, run the following commands in your terminal:
+> **Note:** If you prefer not to install TeX Live, see the [Docker Usage](#-docker-usage) section below.
+
+---
+
+## 📝 Usage
+
+### Basic Compilation
+
+Navigate to your Awesome-CV directory and run:
 
 ```bash
-cd path/to/Awesome-CV/
-
 xelatex -output-directory=examples examples/cv.tex
 ```
 
-This will generate [cv.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf).
+This generates `examples/cv.pdf`.
 
-
-### Using Docker
-
-You can also build the documents using Docker (no TeX Live installation required):
+### Generating a Cover Letter
 
 ```bash
-cd path/to/Awesome-CV/
+xelatex -output-directory=examples examples/coverletter.tex
+```
 
+This generates `examples/coverletter.pdf`.
+
+### Build All Documents
+
+Use the provided Makefile:
+
+```bash
+make
+```
+
+This will compile all example documents (CV and cover letter in both English and Japanese).
+
+---
+
+## 🇯🇵 Japanese Language Support
+
+To create a Japanese CV, simply add the `ja` option to your document class:
+
+```tex
+\documentclass[11pt, a4paper, ja]{awesome-cv}
+```
+
+### Font Configuration
+
+By default, the template uses "Harano Aji" fonts. You can customize the Japanese font:
+
+```tex
+% Use IPA fonts (classic/legacy)
+\setjpfont{IPAMincho}{IPAGothic}
+
+% Or use Noto fonts (if installed)
+\setjpfont{Noto Serif CJK JP}{Noto Sans CJK JP}
+```
+
+### Example Files
+
+Japanese examples are included in the repository:
+- `examples/cv-jp.tex` - Japanese CV template
+- `examples/coverletter-jp.tex` - Japanese cover letter template
+
+---
+
+## 🐳 Docker Usage
+
+Build your documents using Docker without installing TeX Live.
+
+### Quick Build
+
+```bash
 docker run --rm \
   --user "$(id -u):$(id -g)" \
   -i \
@@ -113,12 +218,17 @@ docker run --rm \
   make
 ```
 
-#### Debug
+This command:
+- Mounts your current directory into the container
+- Runs as your user (preserves file permissions)
+- Executes the Makefile to build all documents
+- Removes the container when finished
 
-You can obtain interactive shell access inside Docker for debugging purposes:
+### Interactive Shell (for debugging)
+
+For troubleshooting or manual compilation:
+
 ```bash
-cd path/to/Awesome-CV/
-
 docker run --rm \
   --user "$(id -u):$(id -g)" \
   -it \
@@ -126,25 +236,63 @@ docker run --rm \
   -v "$PWD":/doc \
   texlive/texlive:latest \
   bash
+```
 
+Then compile manually inside the container:
+
+```bash
 xelatex -output-directory=examples examples/cv.tex
 ```
 
-This will generate [coverletter.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/coverletter.pdf) and [cv.pdf](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf).
+---
 
-_See the `examples` folder for more details and sample files._
+## 🖥️ Environment
 
+This template has been tested on:
 
-## Tested Environment
+| Component | Version                      |
+|-----------|------------------------------|
+| OS        | Ubuntu 24.04.3 LTS (64-bit)  |
+| TeX Live  | 2025                         |
+| XeTeX     | 3.141592653-2.6-0.999997     |
+| Docker    | 28.2.2                       |
 
-| Name      | Value                        |
-|-----------|-----------------------------|
-| OS        | Ubuntu 24.04.3 LTS (64-bit) |
-| TeX Live  | 2025                        |
-| XeTeX     | 3.141592653-2.6-0.999997    |
-| Docker    | 28.2.2                      |
+The template should work on other systems with compatible TeX Live installations.
 
+---
 
-## Issues & Support
+## 🤝 Contributing
 
-For bug reports or feature requests, please use the [GitHub Issues page](https://github.com/ravijo/Awesome-CV/issues).
+Contributions are welcome! To contribute:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License & Support
+
+### License
+
+This project is licensed under the **LaTeX Project Public License v1.3c**. See the [LICENSE](https://github.com/ravijo/Awesome-CV/blob/master/LICENCE) file for details.
+
+### Support
+
+- **Bug Reports:** [GitHub Issues](https://github.com/ravijo/Awesome-CV/issues)
+- **Feature Requests:** [GitHub Issues](https://github.com/ravijo/Awesome-CV/issues)
+- **Questions:** Check existing issues or open a new one
+
+### Credits
+
+- Original template by [posquit0](https://github.com/posquit0/Awesome-CV)
+- This fork maintained by [ravijo](https://github.com/ravijo)
+- Inspired by [Fancy CV](https://www.sharelatex.com/templates/cv-or-resume/fancy-cv)
+
+---
+
+<div align="center">
+  <p>If you find this template helpful, please ⭐ star the repository!</p>
+</div>
