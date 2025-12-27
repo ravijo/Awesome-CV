@@ -38,6 +38,9 @@
 # latexrun
 latex.out/
 
+# Ignore draft CV and cover letter
+examples/draft/
+
 ## Auxiliary and intermediate files from other packages:
 # algorithms
 *.alg
