@@ -43,11 +43,15 @@ This fork adds:
 
 ## Preview
 
+### English Language (default)
+
 You can view a sample generated PDF [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf):
 
 | Page 1 | Page 2 |
 |:------:|:------:|
 | [![CV Page 1](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-0.jpg)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf) | [![CV Page 2](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-1.jpg)](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv.pdf) |
+
+### Japanese Language
 
 You can view a sample cv in Japanese language [here](https://raw.githubusercontent.com/ravijo/Awesome-CV/master/examples/cv-jp.pdf):
 
