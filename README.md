@@ -67,6 +67,23 @@ You can view a sample coverletter in Japanese language [here](https://raw.github
 - [TeX Live](https://www.tug.org/texlive) (not required for Docker users; see [Using Docker](#using-docker))
 
 
+## Japanese Language
+
+To use Japanese language, simply provide `ja` to the `documentclass` as shown below:
+```tex
+\documentclass[11pt, a4paper, ja]{awesome-cv}
+%
+% By default, this template uses Harano Aji as the Japanese font.
+% You can switch to a different Japanese font if needed.
+% For example, uncomment the line below to use the classic (legacy) IPA fonts:
+% \setjpfont{IPAMincho}{IPAGothic}
+%
+% Or use Noto fonts (if installed)
+% \setjpfont{Noto Serif CJK JP}{Noto Sans CJK JP}
+```
+_See the `examples` folder for more details and sample files._
+
+
 ## Usage
 
 To generate your CV, run the following commands in your terminal:
