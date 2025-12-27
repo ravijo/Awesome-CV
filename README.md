@@ -29,20 +29,21 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Preview](#-preview)
-- [Quick Start](#-quick-start)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Japanese Language Support](#-japanese-language-support)
-- [Docker Usage](#-docker-usage)
-- [Environment](#-environment)
-- [Contributing](#-contributing)
-- [License & Support](#-license--support)
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Preview](#preview)
+- [Quick Start](#quick-start)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Japanese Language Support](#japanese-language-support)
+- [Docker Usage](#docker-usage)
+- [Environment](#environment)
+- [Contributing](#contributing)
+- [License & Support](#license--support)
 
 ---
 
+<a name="overview"></a>
 ## 🎯 Overview
 
 **Awesome CV** is a professional LaTeX template for creating polished CVs (Curriculum Vitae), Résumés, and Cover Letters. Inspired by [Fancy CV](https://www.sharelatex.com/templates/cv-or-resume/fancy-cv), it features clean, semantic markup that's easy to customize for your specific needs.
@@ -58,6 +59,7 @@ This enhanced fork extends the original template with:
 
 ---
 
+<a name="key-features"></a>
 ## ✨ Key Features
 
 - **Professional Design** - Clean, modern layout that stands out
@@ -70,6 +72,7 @@ This enhanced fork extends the original template with:
 
 ---
 
+<a name="preview"></a>
 ## 👀 Preview
 
 ### English Version
@@ -90,6 +93,7 @@ View the complete [Japanese CV sample (PDF)](https://raw.githubusercontent.com/r
 
 ---
 
+<a name="quick-start"></a>
 ## 🚀 Quick Start
 
 1. **Clone the repository**
@@ -106,13 +110,14 @@ View the complete [Japanese CV sample (PDF)](https://raw.githubusercontent.com/r
    ```bash
    xelatex -output-directory=examples examples/cv.tex
    ```
-   The `xelatex` is included with TeX Live. For more info, please see [Installation](#installation)
+   The `xelatex` is included with TeX Live. For more info, please see [Installation](#installation).
 
 4. **Find your PDF**
    - Your CV will be generated as `examples/cv.pdf`
 
 ---
 
+<a name="installation"></a>
 ## 📦 Installation
 
 ### Requirements
@@ -121,7 +126,7 @@ View the complete [Japanese CV sample (PDF)](https://raw.githubusercontent.com/r
 - **XeTeX** - Included with TeX Live
 - **Git** - For cloning the repository
 
-TeX Live Installation is not required for Docker users. Please see [Docker Usage](#docker-usage)
+TeX Live Installation is not required for Docker users. Please see [Docker Usage](#docker-usage).
 
 ### TeX Live Installation
 
@@ -142,6 +147,7 @@ Download and install from [tug.org/texlive](https://www.tug.org/texlive/)
 
 ---
 
+<a name="usage"></a>
 ## 📝 Usage
 
 ### Basic Compilation
@@ -174,6 +180,7 @@ This will compile all example documents (CV and cover letter in both English and
 
 ---
 
+<a name="japanese-language-support"></a>
 ## 🇯🇵 Japanese Language Support
 
 To create a Japanese CV, simply add the `ja` option to your document class:
@@ -202,6 +209,7 @@ Japanese examples are included in the repository:
 
 ---
 
+<a name="docker-usage"></a>
 ## 🐳 Docker Usage
 
 Build your documents using Docker without installing TeX Live.
@@ -246,6 +254,7 @@ xelatex -output-directory=examples examples/cv.tex
 
 ---
 
+<a name="environment"></a>
 ## 🖥️ Environment
 
 This template has been tested on:
@@ -261,6 +270,7 @@ The template should work on other systems with compatible TeX Live installations
 
 ---
 
+<a name="contributing"></a>
 ## 🤝 Contributing
 
 Contributions are welcome! To contribute:
@@ -273,6 +283,7 @@ Contributions are welcome! To contribute:
 
 ---
 
+<a name="license--support"></a>
 ## 📄 License & Support
 
 ### License
