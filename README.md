@@ -73,6 +73,7 @@ To generate your CV, run the following commands in your terminal:
 
 ```bash
 cd path/to/Awesome-CV/
+
 xelatex -output-directory=examples examples/cv.tex
 ```
 
@@ -85,7 +86,14 @@ You can also build the documents using Docker (no TeX Live installation required
 
 ```bash
 cd path/to/Awesome-CV/
-docker run --rm --user $(id -u):$(id -g) -i -w "/doc" -v "$PWD":/doc texlive/texlive:latest make
+
+docker run --rm \
+  --user "$(id -u):$(id -g)" \
+  -i \
+  -w "/doc" \
+  -v "$PWD":/doc \
+  texlive/texlive:latest \
+  make
 ```
 
 #### Debug
@@ -93,7 +101,15 @@ docker run --rm --user $(id -u):$(id -g) -i -w "/doc" -v "$PWD":/doc texlive/tex
 You can obtain interactive shell access inside Docker for debugging purposes:
 ```bash
 cd path/to/Awesome-CV/
-docker run --rm --user $(id -u):$(id -g) -it -w "/doc" -v "$PWD":/doc texlive/texlive:latest bash
+
+docker run --rm \
+  --user "$(id -u):$(id -g)" \
+  -it \
+  -w "/doc" \
+  -v "$PWD":/doc \
+  texlive/texlive:latest \
+  bash
+
 xelatex -output-directory=examples examples/cv.tex
 ```
 
