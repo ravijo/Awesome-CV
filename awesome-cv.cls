@@ -151,6 +151,8 @@
 \RequirePackage{parskip}
 % Needed for Google Scholar and ORCID icon
 \RequirePackage{academicons}
+% Load xkeyval explicitly (required for \define@key, \ExecuteOptionsX, \ProcessOptionsX)
+\RequirePackage{xkeyval}
 % Define keys to configure PDF author name and title
 \define@key{awesome-cv.cls}{pdfauthor}[Ravi P. Joshi]{\def\pdfauthorname{#1}}
 \define@key{awesome-cv.cls}{pdftitle}[Curriculum Vitae]{\def\pdftitlesubject{#1}}
