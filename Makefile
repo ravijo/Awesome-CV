@@ -1,7 +1,7 @@
 # ===========================
 # Configuration
 # ===========================
-CC  := lualatex
+CC  := xelatex
 BIB := biber
 
 EXAMPLES_DIR := examples
