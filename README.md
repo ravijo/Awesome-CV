@@ -124,6 +124,7 @@ View the complete [Japanese CV sample (PDF)](https://raw.githubusercontent.com/r
 
 - **TeX Live** (recommended) - Full LaTeX distribution
 - **XeTeX** - Included with TeX Live
+- **Fonts** - For obvious reasons
 - **Git** - For cloning the repository
 
 TeX Live Installation is not required for Docker users. Please see [Docker Usage](#docker-usage).
@@ -144,6 +145,18 @@ brew install --cask mactex
 Download and install from [tug.org/texlive](https://www.tug.org/texlive/)
 
 > **Note:** If you prefer not to install TeX Live, see the [Docker Usage](#-docker-usage) section below.
+
+### Fonts Installation
+
+**Ubuntu/Debian:**
+```bash
+sudo apt-get update
+sudo apt-get install --yes \
+    fonts-roboto \
+    fonts-adobe-sourcesans3
+```
+
+> **Note:** If you prefer not to install fonts, see the [Docker Usage](#-docker-usage) section below.
 
 ---
 
@@ -217,12 +230,16 @@ Build your documents using Docker without installing TeX Live.
 ### Quick Build
 
 ```bash
+docker build -t texlive-custom .
+```
+
+```bash
 docker run --rm \
   --user "$(id -u):$(id -g)" \
   -i \
   -w "/doc" \
   -v "$PWD":/doc \
-  texlive/texlive:latest \
+  texlive-custom \
   make
 ```
 
@@ -242,7 +259,7 @@ docker run --rm \
   -it \
   -w "/doc" \
   -v "$PWD":/doc \
-  texlive/texlive:latest \
+  texlive-custom \
   bash
 ```
 
