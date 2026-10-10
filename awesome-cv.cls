@@ -882,14 +882,15 @@
 \newcommand*{\cvhonor}[5][]{%
   \honordatestyle{#5} &
   \honorpositionstyle{#2}%
-  % Optional annotation
-  \ifthenelse{\equal{#1}{}}{%
-  }{%
-    {\fontsize{8pt}{1em}\bodyfontlight\color{text}#1}%
+  % A colon selects the title separator; other optional values remain annotations.
+  \ifthenelse{\equal{#1}{:}}{}{%
+    \ifthenelse{\equal{#1}{}}{}{%
+      {\fontsize{8pt}{1em}\bodyfontlight\color{text}#1}%
+    }%
   }%
-  % Comma only if title is not empty
-  \ifthenelse{\equal{#3}{}}{%
-  }{, \honortitlestyle{#3}} &
+  \ifthenelse{\equal{#3}{}}{}{%
+    {\ifthenelse{\equal{#1}{:}}{:}{,} \honortitlestyle{#3}}%
+  } &
   \honorlocationstyle{#4} \\
 }
 
