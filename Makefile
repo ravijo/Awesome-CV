@@ -3,6 +3,8 @@
 # ===========================
 CC  := xelatex
 BIB := biber
+# Word version of each CV, generated from the same sources (needs the .bbl)
+DOCX := python3 scripts/cv2docx.py
 
 EXAMPLES_DIR := examples
 DRAFT_DIR    := examples/draft
@@ -41,11 +43,13 @@ examples: $(ALL_PDFS)
 # ===========================
 # CV PDFs require biber for bibliography processing
 # Each CV only depends on files in its own directory
+# The DOCX is written next to the PDF, before clean removes the .bbl
 $(CV_PDFS): %.pdf: $(EXAMPLES_DIR)/%.tex
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
 	$(BIB) $(EXAMPLES_DIR)/$*
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
+	$(DOCX) $<
 
 # Cover letters are simpler - single pass
 $(COVER_PDFS): %.pdf: $(EXAMPLES_DIR)/%.tex
