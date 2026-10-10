@@ -1,4 +1,4 @@
-name: Compile PDFs
+name: Compile PDFs and DOCX
 
 on:
   push: {}
@@ -13,12 +13,17 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v6
 
-    - name: Install fonts
+    # Fonts for the PDFs; python3-docx and python3-fonttools for
+    # scripts/cv2docx.py, which writes a DOCX next to each CV PDF
+    # (same packages as the Dockerfile)
+    - name: Install dependencies
       run: |
         apt update
         apt install --yes \
           fonts-roboto \
           fonts-adobe-sourcesans3 \
+          python3-docx \
+          python3-fonttools \
           ;
 
     - name: Compile
@@ -27,4 +32,6 @@ jobs:
     - uses: actions/upload-artifact@v6
       with:
         name: examples
-        path: examples/*.pdf
+        path: |
+          examples/*.pdf
+          examples/*.docx
