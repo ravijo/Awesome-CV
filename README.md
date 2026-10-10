@@ -204,6 +204,15 @@ python3 scripts/cv2docx.py examples/cv.tex
 
 It requires `python3-docx` and `python3-fonttools` (included in the Docker image). Cover letters are PDF only. Japanese CVs (`ja` class option) use the standard Windows Japanese fonts (MS PGothic/MS Gothic) with black body text instead of embedding the template's fonts.
 
+To turn a DOCX into a PDF, use `scripts/docx2pdf.sh` rather than Word's PDF export (Gmail flagged a Word-exported CV as a virus, while LibreOffice's export of the same file passed). It runs LibreOffice with the fonts from a Windows installation for that run only, so the layout matches Word:
+
+```bash
+scripts/docx2pdf.sh examples/cv-jp.docx            # writes examples/cv-jp.pdf next to it
+scripts/docx2pdf.sh -o out/ -f a.docx b.docx       # other folder, overwrite existing PDFs
+```
+
+It finds the Windows `Fonts` folder on a mounted Windows partition or under WSL; set `WINDOWS_FONTS_DIR` to point elsewhere.
+
 ---
 
 <a name="japanese-language-support"></a>
