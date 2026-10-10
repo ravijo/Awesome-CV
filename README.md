@@ -56,6 +56,7 @@ This enhanced fork extends the original template with:
 - **🇯🇵 Japanese Language** - Full Japanese language support with multiple font options
 - **🎓 Academic Icons** - Built-in icons for Google Scholar and ORCID profiles
 - **🐳 Docker Support** - Build without installing TeX Live locally
+- **📄 Word (DOCX) Output** - Generates an editable `.docx` alongside each CV PDF, with the same layout and embedded fonts (see [Word (DOCX) Version](#word-docx-version))
 
 ---
 
@@ -190,6 +191,18 @@ make
 ```
 
 This will compile all example documents (CV and cover letter in both English and Japanese).
+
+### Word (DOCX) Version
+
+`make` also writes a `.docx` version of each CV next to its PDF (e.g. `examples/cv.docx`), using `scripts/cv2docx.py`. It is built from the same `.tex` sources and bibliography, uses the same layout, and embeds the fonts so it looks the same in Word on any machine. The text stays editable and readable by job portals.
+
+To run it on its own, build the PDF first and run it before temporary files are cleaned (it needs the `.bbl` file biber writes):
+
+```bash
+python3 scripts/cv2docx.py examples/cv.tex
+```
+
+It requires `python3-docx` and `python3-fonttools` (included in the Docker image). Cover letters are PDF only. Japanese CVs (`ja` class option) use the standard Windows Japanese fonts (MS PGothic/MS Gothic) with black body text instead of embedding the template's fonts.
 
 ---
 
