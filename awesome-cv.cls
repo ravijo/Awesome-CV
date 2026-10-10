@@ -542,7 +542,7 @@
 
 % Table column widths
 \newcommand{\acvDateColumnWidth}{4.5cm}
-\newcommand{\acvHonorDateWidth}{1.5cm}
+\newcommand{\acvHonorDateWidth}{1cm}
 \newcommand{\acvHonorLocationWidth}{2.5cm}
 \newlength{\cvskillwidth}
 % Header dimensions are reused by \makecvheader, which may be called more
@@ -559,6 +559,8 @@
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{J}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{K}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
 
 % Use to draw horizontal line with specific thickness
 \def\vhrulefill#1{\leavevmode\leaders\hrule\@height#1\hfill \kern\z@}
@@ -865,16 +867,23 @@
 }
 
 % Define an environment for cvhonor
-\newenvironment{cvhonors}[1][\acvHonorLocationWidth]{%
+% Usage: \begin{cvhonors}[<location width>][<date width>]
+% By default the location column shrinks to fit its widest entry (e.g. "Japan").
+% Columns are top-aligned so the date/bullet sits on the first line of a wrapped entry.
+\NewDocumentEnvironment{cvhonors}{O{} O{\acvHonorDateWidth}}{%
   \vspace{\acvSectionContentTopSkip}
   \vspace{-2mm}
-  \begin{center}
+  \center
   \setlength\tabcolsep{0pt}
   \setlength{\extrarowheight}{0pt}
-  \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} C{\acvHonorDateWidth} L{\textwidth - \acvHonorDateWidth - #1} R{#1}}
+  % tabularx scans for \end{cvhonors}: call it outside \ifthenelse and use \center (not \begin{center}).
+  \ifthenelse{\equal{#1}{}}
+    {\def\acv@honorstable{\tabularx{\textwidth}{J{#2} >{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X @{\hspace{1em}}r}}}
+    {\def\acv@honorstable{\tabularx{\textwidth}{J{#2} >{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X K{#1}}}}%
+  \acv@honorstable
 }{%
-  \end{tabular*}
-  \end{center}
+  \endtabularx
+  \endcenter
 }
 % Define a line of cv information(honor, award or something else)
 % Additionally, field separator instead of comma can be given as an optional argument
@@ -882,14 +891,15 @@
 \newcommand*{\cvhonor}[5][]{%
   \honordatestyle{#5} &
   \honorpositionstyle{#2}%
-  % A colon selects the title separator; other optional values remain annotations.
+  % A colon selects the title separator; other optional values are annotations
+  % (e.g. "~by") that lead into the title, so no comma is added after them.
   \ifthenelse{\equal{#1}{:}}{}{%
     \ifthenelse{\equal{#1}{}}{}{%
       {\fontsize{8pt}{1em}\bodyfontlight\color{text}#1}%
     }%
   }%
   \ifthenelse{\equal{#3}{}}{}{%
-    {\ifthenelse{\equal{#1}{:}}{:}{,} \honortitlestyle{#3}}%
+    {\ifthenelse{\equal{#1}{:}}{:}{\ifthenelse{\equal{#1}{}}{,}{}} \honortitlestyle{#3}}%
   } &
   \honorlocationstyle{#4} \\
 }
