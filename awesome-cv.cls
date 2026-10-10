@@ -25,8 +25,8 @@
 %-------------------------------------------------------------------------------
 %                Identification
 %-------------------------------------------------------------------------------
-\ProvidesClass{awesome-cv}[2017/02/05 v1.6.1 Awesome Curriculum Vitae Class]
-\NeedsTeXFormat{LaTeX2e}
+\NeedsTeXFormat{LaTeX2e}[2020/10/01]
+\ProvidesClass{awesome-cv}[2026/10/10 v1.6.2 Awesome Curriculum Vitae Class]
 
 
 %-------------------------------------------------------------------------------
@@ -54,6 +54,8 @@
 %-------------------------------------------------------------------------------
 %                3rd party packages
 %-------------------------------------------------------------------------------
+% Needed for width arithmetic such as {\textwidth - \acvDateColumnWidth}
+\RequirePackage{calc}
 % Needed to make fixed length table
 \RequirePackage{array}
 \RequirePackage{tabularx}
@@ -79,8 +81,6 @@
 \RequirePackage{setspace}
 % Needed to manage fonts
 \RequirePackage[quiet]{fontspec}
-% To support LaTeX quoting style
-\defaultfontfeatures{Ligatures=TeX}
 % Conditional Japanese language support
 \if@japanese
   \RequirePackage{xeCJK}
@@ -115,7 +115,9 @@
 % Needed to use icons from font-awesome
 \RequirePackage{fontawesome6}
 \RequirePackage{accsupp}
+% Ligatures=TeX keeps LaTeX quoting/dash input (`` '' -- ---) working
 \defaultfontfeatures{
+  Ligatures=TeX,
   Renderer=HarfBuzz,
 }
 \setmainfont{Source Sans 3}[
@@ -151,21 +153,18 @@
 \RequirePackage{parskip}
 % Needed for Google Scholar and ORCID icon
 \RequirePackage{academicons}
-% Load xkeyval explicitly (required for \define@key, \ExecuteOptionsX, \ProcessOptionsX)
-\RequirePackage{xkeyval}
-% Define keys to configure PDF author name and title
-\define@key{awesome-cv.cls}{pdfauthor}[Ravi P. Joshi]{\def\pdfauthorname{#1}}
-\define@key{awesome-cv.cls}{pdftitle}[Curriculum Vitae]{\def\pdftitlesubject{#1}}
-% Parse Keys
-\ExecuteOptionsX{pdfauthor,pdftitle}
-\ProcessOptionsX
-% Define commands to set the keys
-\newcommand\setpdfauthor[1]{\setkeys{awesome-cv.cls}{pdfauthor=#1}}
-\newcommand\setpdftitle[1]{\setkeys{awesome-cv.cls}{pdftitle=#1}}
+% PDF author name and title
+% Usage: \setpdfauthor{<name>} (default: \name{<first>}{<last>}), \setpdftitle{<title>}
+\newcommand*{\setpdfauthor}[1]{\def\pdfauthorname{#1}}
+\newcommand*{\setpdftitle}[1]{\def\pdftitlesubject{#1}}
+\setpdftitle{Curriculum Vitae}
 % Needed to deal hyperlink
 \RequirePackage[hidelinks,unicode]{hyperref}
 % Configure PDF author name and title
 \AtEndPreamble{
+  \ifdefined\pdfauthorname\else
+    \ifdefined\@firstname\def\pdfauthorname{\@firstname\space\@lastname}\else\def\pdfauthorname{}\fi
+  \fi
   \hypersetup{
     pdftitle={{\pdftitlesubject}},
     pdfauthor={{\pdfauthorname}},
@@ -259,7 +258,7 @@
 \newcommand*{\footerstyle}[1]{{\fontsize{8pt}{1em}\footerfont\scshape\color{lighttext} #1}}
 \newcommand*{\sectionstyleface}[1]{{\fontsize{16pt}{1em}\bodyfont\bfseries #1}}
 \newcommand*{\sectionstyle}[1]{%
-  \def\@acvSectionTmp{#1}
+  \def\@acvSectionTmp{#1}%
   \ifthenelse{\boolean{acvSectionColorHighlight}}{%
     \StrSplit{\@acvSectionTmp}{3}{\acvSectionStringAwesome}{\acvSectionStringPlain}%
       \color{awesome}\sectionstyleface{\acvSectionStringAwesome%
@@ -295,10 +294,10 @@
 % For elements of the cover letter
 \newcommand*{\lettersectionstyleface}[1]{{\fontsize{14pt}{1em}\bodyfont\bfseries #1}}
 \newcommand*{\lettersectionstyle}[1]{%
-  \def\@acvLetterSectionTmp{#1}
+  \def\@acvLetterSectionTmp{#1}%
   \ifthenelse{\boolean{acvSectionColorHighlight}}{%
     \StrSplit{\@acvLetterSectionTmp}{3}{\acvLetterSectionStringAwesome}{\acvLetterSectionStringPlain}%
-      \color{awesome}\sectionstyleface{\acvLetterSectionStringAwesome%
+      \color{awesome}\lettersectionstyleface{\acvLetterSectionStringAwesome%
       \color{text}{\acvLetterSectionStringPlain}}}%
       {\color{text}\lettersectionstyleface{\@acvLetterSectionTmp}}}
 \newcommand*{\recipientaddressstyle}[1]{{\fontsize{9pt}{1em}\bodyfont\scshape\color{graytext} #1}}
@@ -353,10 +352,9 @@
 
 % Defines writer's mobile (optional)
 % Usage: \mobile{<mobile number>}
-\newcommand*{\mobile}[1]
-{
-  \def\@mobile{#1}
-  \def\@teluri{tel:\@mobile}
+\newcommand*{\mobile}[1]{%
+  \def\@mobile{#1}%
+  \def\@teluri{tel:\@mobile}%
   % Strip unwanted characters
   \StrDel{\@teluri}{ }[\@teluri]%
   \StrDel{\@teluri}{-}[\@teluri]%
@@ -366,10 +364,9 @@
 
 % Defines writer's WhatsApp (optional)
 % Usage: \whatsapp{<mobile number>}
-\newcommand*{\whatsapp}[1]
-{
-  \def\@whatsapp{#1}
-  \def\@wameuri{https://wa.me/\@whatsapp}
+\newcommand*{\whatsapp}[1]{%
+  \def\@whatsapp{#1}%
+  \def\@wameuri{https://wa.me/\@whatsapp}%
   % Strip unwanted characters
   \StrDel{\@wameuri}{ }[\@wameuri]%
   \StrDel{\@wameuri}{+}[\@wameuri]%
@@ -515,10 +512,11 @@
 % Defines an enclosure for letter (cover letter only, optional)
 % Usage: \letterenclosure[<enclosure name>]{<enclosure>}
 \newcommand*{\letterenclname}[1][Enclosure]{\def\@letterenclname{#1}}
+\letterenclname
 \newcommand*{\letterenclosure}[2][]{%
   % if an optional argument is provided, use it to redefine \enclname
-  \ifthenelse{\equal{#1}{}}{}{\def\@letterenclname{#1}}
-  \def\@letterenclosure{#2}
+  \ifthenelse{\equal{#1}{}}{}{\def\@letterenclname{#1}}%
+  \def\@letterenclosure{#2}%
 }
 
 
@@ -577,6 +575,7 @@
 % Render optional free-form header information using the same separator as
 % the other social items. This is intentionally text-only so callers can
 % supply their own formatting or links.
+\newcommand*{\acv@headersocialbreak}{\\[\acvHeaderAfterSocialSkip]}
 \newcommand*{\acvHeaderSocialItem}[1]{%
   \ifbool{acvHeaderIsStart}%
     {\setbool{acvHeaderIsStart}{false}}%
@@ -627,150 +626,33 @@
     \ifthenelse{\isundefined{\@address}}{}{\headeraddressstyle{\@address\\[\acvHeaderAfterAddressSkip]}}%
     \headersocialstyle{%
       \setbool{acvHeaderIsStart}{true}%
-      \ifthenelse{\isundefined{\@mobile}}%
-        {}%
-        {%
-          \href{\@teluri}{\faAlt{tel:\@mobile}{\faMobile}{\@mobile}}%
-          \setbool{acvHeaderIsStart}{false}%
-        }%
-      \ifthenelse{\isundefined{\@whatsapp}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{\@wameuri}{\faAlt{WhatsApp: \@whatsapp}{\faSquareWhatsapp}{\@whatsapp}}%
-        }%
-      \ifthenelse{\isundefined{\@email}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{mailto:\@email}{\faAlt{mailto:\@email}{\faEnvelope}{\@email}}%
-        }%
-      \ifthenelse{\isundefined{\@dateofbirth}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \faAlt{DoB: \@dateofbirth}{\faCakeCandles}{\@dateofbirth}%
-        }%
-      \ifthenelse{\isundefined{\@homepage}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{\@homepage}{\faAlt{homepage: \@homepage}{\faHouseChimney}{\@homepage}}%
-        }%
-      \ifthenelse{\isundefined{\@github}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://github.com/\@github}{\faAlt{GitHub: @\@github}{\faSquareGithub}{\@github}}%
-        }%
-      \ifthenelse{\isundefined{\@gitlab}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://gitlab.com/\@gitlab}{\faAlt{GitLab: @\@gitlab}{\faGitlab}{\@gitlab}}%
-        }%
-      \ifthenelse{\isundefined{\@bitbucket}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://bitbucket.com/\@bitbucket}{\faAlt{BitBucket: @\@bitbucket}{\faBitbucket}{\@bitbucket}}%
-        }%
-      \ifthenelse{\isundefined{\@stackoverflowid}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://stackoverflow.com/users/\@stackoverflowid}{\faAlt{StackOverflow: @\@stackoverflowname}{\faStackOverflow}{\@stackoverflowname}}%
-        }%
-      \ifthenelse{\isundefined{\@linkedin}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://www.linkedin.com/in/\@linkedin}{\faAlt{LinkedIn: /in/\@linkedin}{\faLinkedin}{\@linkedin}}%
-        }%
-      \ifthenelse{\isundefined{\@orcid}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://orcid.org/\@orcid}{\faAlt{OrcID: \@orcid}{\faOrcid}{\@orcid}}%
-        }%
-      \ifthenelse{\isundefined{\@twitter}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://twitter.com/\@twitter}{\faAlt{Twitter: @\@twitter}{\faTwitter}{\@twitter}}%
-        }%
-      \ifthenelse{\isundefined{\@x}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://x.com/\@x}{\faAlt{X: @\@x}{\faXTwitter}{\@x}}%
-        }%
-      \ifthenelse{\isundefined{\@mastodonname}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://\@mastodoninstance/@\@mastodonname}{\faAlt{Mastodon: \@mastodonname{}@\@mastodoninstance}{\faMastodon}{\@mastodonname}}%
-        }%
-      \ifthenelse{\isundefined{\@skype}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \faAlt{Skype: \@skype}{\faSkype}{\@skype}%
-        }%
-      \ifthenelse{\isundefined{\@reddit}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://www.reddit.com/user/\@reddit}{\faAlt{Reddit: /u/\@reddit}{\faReddit}{\@reddit}}%
-        }%
-      \ifthenelse{\isundefined{\@researchgate}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://www.researchgate.net/profile/\@researchgate}{\faAlt{ResearchGate: \@researchgate}{\faResearchgate}{\@researchgate}}%
-        }%
-      \ifthenelse{\isundefined{\@xing}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://www.xing.com/profile/\@xing}{\faAlt{Xing: \@xing}{\faSquareXing}{\@xing}}
-        }%
-      \ifthenelse{\isundefined{\@medium}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://medium.com/@\@medium}{\faAlt{Medium: @\@medium}{\faMedium}{\@medium}}%
-        }%
-      \ifthenelse{\isundefined{\@kaggle}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://kaggle.com/\@kaggle}{\faAlt{Kaggle: \@kaggle}{\faKaggle}{\@kaggle}}%
-        }%
-      \ifthenelse{\isundefined{\@hackerrank}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://www.hackerrank.com/\@hackerrank}{\faAlt{HackerRank: \@hackerrank}{\faHackerrank}{\@hackerrank}}%
-        }%
-      \ifthenelse{\isundefined{\@telegram}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://t.me/\@telegram}{\faAlt{Telegram: \@telegram}{\faTelegram}{\@telegram}}%
-        }%
-      \ifthenelse{\isundefined{\@googlescholarid}}%
-        {}%
-        {%
-          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
-          \href{https://scholar.google.com/citations?user=\@googlescholarid}{\faAlt{Google Scholar: \@googlescholarid}{\faGraduationCap}{\@googlescholarname}}%
-        }%
-      \ifthenelse{\isundefined{\@extrainfo}}%
-        {}%
-        {%
-          \acvHeaderSocialItem{\@extrainfo}%
-        }%
-    } \\[\acvHeaderAfterSocialSkip]%
+      \ifthenelse{\isundefined{\@mobile}}{}{\acvHeaderSocialItem{\href{\@teluri}{\faAlt{tel:\@mobile}{\faMobile}{\@mobile}}}}%
+      \ifthenelse{\isundefined{\@whatsapp}}{}{\acvHeaderSocialItem{\href{\@wameuri}{\faAlt{WhatsApp: \@whatsapp}{\faSquareWhatsapp}{\@whatsapp}}}}%
+      \ifthenelse{\isundefined{\@email}}{}{\acvHeaderSocialItem{\href{mailto:\@email}{\faAlt{mailto:\@email}{\faEnvelope}{\@email}}}}%
+      \ifthenelse{\isundefined{\@dateofbirth}}{}{\acvHeaderSocialItem{\faAlt{DoB: \@dateofbirth}{\faCakeCandles}{\@dateofbirth}}}%
+      \ifthenelse{\isundefined{\@homepage}}{}{\acvHeaderSocialItem{\href{\@homepage}{\faAlt{homepage: \@homepage}{\faHouseChimney}{\@homepage}}}}%
+      \ifthenelse{\isundefined{\@github}}{}{\acvHeaderSocialItem{\href{https://github.com/\@github}{\faAlt{GitHub: @\@github}{\faSquareGithub}{\@github}}}}%
+      \ifthenelse{\isundefined{\@gitlab}}{}{\acvHeaderSocialItem{\href{https://gitlab.com/\@gitlab}{\faAlt{GitLab: @\@gitlab}{\faGitlab}{\@gitlab}}}}%
+      \ifthenelse{\isundefined{\@bitbucket}}{}{\acvHeaderSocialItem{\href{https://bitbucket.org/\@bitbucket}{\faAlt{BitBucket: @\@bitbucket}{\faBitbucket}{\@bitbucket}}}}%
+      \ifthenelse{\isundefined{\@stackoverflowid}}{}{\acvHeaderSocialItem{\href{https://stackoverflow.com/users/\@stackoverflowid}{\faAlt{StackOverflow: @\@stackoverflowname}{\faStackOverflow}{\@stackoverflowname}}}}%
+      \ifthenelse{\isundefined{\@linkedin}}{}{\acvHeaderSocialItem{\href{https://www.linkedin.com/in/\@linkedin}{\faAlt{LinkedIn: /in/\@linkedin}{\faLinkedin}{\@linkedin}}}}%
+      \ifthenelse{\isundefined{\@orcid}}{}{\acvHeaderSocialItem{\href{https://orcid.org/\@orcid}{\faAlt{OrcID: \@orcid}{\faOrcid}{\@orcid}}}}%
+      \ifthenelse{\isundefined{\@twitter}}{}{\acvHeaderSocialItem{\href{https://twitter.com/\@twitter}{\faAlt{Twitter: @\@twitter}{\faTwitter}{\@twitter}}}}%
+      \ifthenelse{\isundefined{\@x}}{}{\acvHeaderSocialItem{\href{https://x.com/\@x}{\faAlt{X: @\@x}{\faXTwitter}{\@x}}}}%
+      \ifthenelse{\isundefined{\@mastodonname}}{}{\acvHeaderSocialItem{\href{https://\@mastodoninstance/@\@mastodonname}{\faAlt{Mastodon: \@mastodonname{}@\@mastodoninstance}{\faMastodon}{\@mastodonname}}}}%
+      \ifthenelse{\isundefined{\@skype}}{}{\acvHeaderSocialItem{\faAlt{Skype: \@skype}{\faSkype}{\@skype}}}%
+      \ifthenelse{\isundefined{\@reddit}}{}{\acvHeaderSocialItem{\href{https://www.reddit.com/user/\@reddit}{\faAlt{Reddit: /u/\@reddit}{\faReddit}{\@reddit}}}}%
+      \ifthenelse{\isundefined{\@researchgate}}{}{\acvHeaderSocialItem{\href{https://www.researchgate.net/profile/\@researchgate}{\faAlt{ResearchGate: \@researchgate}{\faResearchgate}{\@researchgate}}}}%
+      \ifthenelse{\isundefined{\@xing}}{}{\acvHeaderSocialItem{\href{https://www.xing.com/profile/\@xing}{\faAlt{Xing: \@xing}{\faSquareXing}{\@xing}}}}%
+      \ifthenelse{\isundefined{\@medium}}{}{\acvHeaderSocialItem{\href{https://medium.com/@\@medium}{\faAlt{Medium: @\@medium}{\faMedium}{\@medium}}}}%
+      \ifthenelse{\isundefined{\@kaggle}}{}{\acvHeaderSocialItem{\href{https://kaggle.com/\@kaggle}{\faAlt{Kaggle: \@kaggle}{\faKaggle}{\@kaggle}}}}%
+      \ifthenelse{\isundefined{\@hackerrank}}{}{\acvHeaderSocialItem{\href{https://www.hackerrank.com/\@hackerrank}{\faAlt{HackerRank: \@hackerrank}{\faHackerrank}{\@hackerrank}}}}%
+      \ifthenelse{\isundefined{\@telegram}}{}{\acvHeaderSocialItem{\href{https://t.me/\@telegram}{\faAlt{Telegram: \@telegram}{\faTelegram}{\@telegram}}}}%
+      \ifthenelse{\isundefined{\@googlescholarid}}{}{\acvHeaderSocialItem{\href{https://scholar.google.com/citations?user=\@googlescholarid}{\faAlt{Google Scholar: \@googlescholarid}{\faGraduationCap}{\@googlescholarname}}}}%
+      \ifthenelse{\isundefined{\@extrainfo}}{}{\acvHeaderSocialItem{\@extrainfo}}%
+      % End the social line (after this style group closes) only if something was printed on it
+      \ifbool{acvHeaderIsStart}{}{\aftergroup\acv@headersocialbreak}%
+    }%
     \ifthenelse{\isundefined{\@quote}}%
       {}%
       {\headerquotestyle{\@quote\\}\vspace{\acvHeaderAfterQuoteSkip}}%
@@ -794,9 +676,10 @@
 \newcommand{\cvsection}[1]{%
   \pdfbookmark{#1}{cvsec:#1}
   \vspace{\acvSectionTopSkip}
-  \sectionstyle{#1}
+  % \space: gap between the title and the divider rule
+  {\sectionstyle{#1}\space
   \phantomsection
-  \color{sectiondivider}\vhrulefill{0.9pt}
+  \color{sectiondivider}\vhrulefill{0.9pt}}%
 }
 
 % Define a subsection for CV
@@ -854,13 +737,14 @@
   \setlength\tabcolsep{0pt}
   \setlength{\extrarowheight}{0pt}
   \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}} L{\textwidth - \acvDateColumnWidth} R{\acvDateColumnWidth}}
-    \setlength\leftskip{0.2cm}
-    \subentrytitlestyle{#2} & \ifthenelse{\equal{#1}{}}
-      {\subentrydatestyle{#3}}{}
-    \ifthenelse{\equal{#1}{}}
+    % Without a position the date goes on the title row
+    \setlength\leftskip{0.2cm}%
+    \subentrytitlestyle{#2} & \ifstrempty{#1}{\subentrydatestyle{#3}}{} \\
+    \ifstrempty{#1}
       {}
       {\subentrypositionstyle{#1} & \subentrydatestyle{#3} \\}
-    \ifthenelse{\equal{#4}{}}
+    % \multicolumn must come first in its cell, so the test has to be expandable
+    \ifstrempty{#4}
       {}
       {\multicolumn{2}{L{\textwidth}}{\subdescriptionstyle{#4}} \\}
   \end{tabular*}
@@ -949,8 +833,8 @@
 \newcommand{\lettersection}[1]{%
   \par\addvspace{2.5ex}
   \phantomsection{}
-  \lettersectionstyle{#1}
-  \color{sectiondivider}\vhrulefill{0.9pt}
+  {\lettersectionstyle{#1}\space
+  \color{sectiondivider}\vhrulefill{0.9pt}}%
   \par\nobreak\addvspace{0.4ex}
   \lettertextstyle
 }
@@ -1006,7 +890,7 @@
 ]{biblatex}
 
 % Avoid splitting entries across page break (only for 3 or fewer lines)
-\AtBeginEnvironment{thebibliography}{%
+\AtBeginBibliography{%
   \clubpenalty10000
   \@clubpenalty \clubpenalty
   \widowpenalty10000
@@ -1038,8 +922,16 @@
   }
 }
 
+% Bibliography rows: the right column (location/year) takes its natural width and the
+% left column fills the rest; rows are vertically centred as with the L/R column types.
+\newcommand*{\acv@bibtablesetup}{%
+  \setlength\tabcolsep{0pt}%
+  \setlength{\extrarowheight}{0pt}%
+  \renewcommand{\tabularxcolumn}[1]{m{##1}}%
+}
+
 \DeclareBibliographyDriver{article}{%
-  \fontsize{9pt}{1em}\bodyfont%
+  \fontsize{9pt}{1em}\bodyfont\color{graytext}%
   \printfield{title}%
   \newblock%
   \printnames{author}%
@@ -1054,20 +946,19 @@
     \printlist{publisher}%
     \par%
     {%
-      \setlength\tabcolsep{0pt}
-      \setlength{\extrarowheight}{0pt}
-      \begin{tabular*}{\textwidth - 0.4cm}{@{\extracolsep{\fill}} L{\textwidth - 5cm} R{4cm}}
+      \acv@bibtablesetup
+      \begin{tabularx}{\textwidth - 0.4cm}{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X @{\hspace{1em}} r}
         \usebibmacro{doi+isbn+url}%
           &%
         \printfield{year}%
-      \end{tabular*}
+      \end{tabularx}
     }
   }
   \par\vspace{0.3\baselineskip}
 }
 
 \DeclareBibliographyDriver{inproceedings}{%
-  \fontsize{9pt}{1em}\bodyfont%
+  \fontsize{9pt}{1em}\bodyfont\color{graytext}%
   \printfield{title}%
   \newblock%
   \printnames{author}%
@@ -1075,22 +966,21 @@
   \newblock%
   {%
     \fontsize{8pt}{1em}\bodyfontlight\color{graytext}%
-    \setlength\tabcolsep{0pt}
-    \setlength{\extrarowheight}{0pt}
-    \begin{tabular*}{\textwidth - 0.4cm}{@{\extracolsep{\fill}} L{\textwidth - 5cm} R{4cm}}
+    \acv@bibtablesetup
+    \begin{tabularx}{\textwidth - 0.4cm}{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X @{\hspace{1em}} r}
       \printfield{booktitle}%
         &%
       \conflocationstyle{\printlist{location}}\\%
       \usebibmacro{doi+isbn+url}%
         &%
       \printfield{year}%
-    \end{tabular*}
+    \end{tabularx}
   }
   \par\vspace{0.3\baselineskip}
 }
 
 \DeclareBibliographyDriver{incollection}{%
-  \fontsize{9pt}{1em}\bodyfont%
+  \fontsize{9pt}{1em}\bodyfont\color{graytext}%
   \printfield{title}%
   \newblock%
   \printnames{author}%
@@ -1109,7 +999,7 @@
 }
 
 \DeclareBibliographyDriver{misc}{%
-  \fontsize{9pt}{1em}\bodyfont%
+  \fontsize{9pt}{1em}\bodyfont\color{graytext}%
   \printfield{title}%
   \newblock%
   \printnames{author}%
@@ -1130,7 +1020,7 @@
 }
 
 \DeclareBibliographyDriver{report}{%
-  \fontsize{9pt}{1em}\bodyfont%
+  \fontsize{9pt}{1em}\bodyfont\color{graytext}%
   \printfield{title}%
   \newblock%
   \printnames{author}%
@@ -1148,16 +1038,14 @@
   \par\vspace{0.3\baselineskip}
 }
 
+% Authors as "Given Family, Given Family, ..." (no "and" before the last one)
+\DeclareDelimFormat{multinamedelim}{\addcomma\space}
+\DeclareDelimFormat{finalnamedelim}{\addcomma\space}
 \DeclareNameFormat{author}{%
   \fontsize{9pt}{1em}\bodyfont%
-  \renewcommand*{\multinamedelim}{\addcomma\addspace}%
   \nameparts{#1}%
-  \ifthenelse{\value{listcount}=1}
-    {\ifblank{\namepartgiven}{}{\namepartgiven\space}%
-    \namepartfamily}%
-    {\ifblank{\namepartgiven}{}{\namepartgiven\space}%
-    \namepartfamily}%
-  \ifthenelse{\value{listcount}<\value{liststop}}
-  {\addcomma\space}
-  {}
+  % name:delim prints \multinamedelim / \finalnamedelim before every name but the first
+  \usebibmacro{name:delim}{\namepartgiven\namepartfamily}%
+  \ifblank{\namepartgiven}{}{\namepartgiven\space}%
+  \namepartfamily%
 }
