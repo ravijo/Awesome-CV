@@ -541,6 +541,8 @@
 % Table column widths
 \newcommand{\acvDateColumnWidth}{4.5cm}
 \newcommand{\acvHonorDateWidth}{1cm}
+% Gap after a date that is wider than \acvHonorDateWidth (e.g. "2020年")
+\newcommand{\acvHonorDateSep}{1em}
 \newcommand{\acvHonorLocationWidth}{2.5cm}
 \newlength{\cvskillwidth}
 % Header dimensions are reused by \makecvheader, which may be called more
@@ -680,6 +682,8 @@
   {\sectionstyle{#1}\space
   \phantomsection
   \color{sectiondivider}\vhrulefill{0.9pt}}%
+  % End the heading line, so content that follows without a blank line starts below it
+  \par
 }
 
 % Define a subsection for CV
@@ -753,17 +757,28 @@
 % Define an environment for cvhonor
 % Usage: \begin{cvhonors}[<location width>][<date width>]
 % By default the location column shrinks to fit its widest entry (e.g. "Japan").
+% The date column is at least <date width> and widens for longer dates (e.g. "2020年").
 % Columns are top-aligned so the date/bullet sits on the first line of a wrapped entry.
+\newlength{\acv@honordatewidth}
+\newsavebox{\acv@honordatebox}
+\newcommand*{\acv@honordate}[1]{%
+  \sbox{\acv@honordatebox}{#1}%
+  \ifdim\wd\acv@honordatebox<\acv@honordatewidth
+    \makebox[\acv@honordatewidth][l]{\usebox{\acv@honordatebox}}%
+  \else
+    \usebox{\acv@honordatebox}\hspace{\acvHonorDateSep}%
+  \fi}
 \NewDocumentEnvironment{cvhonors}{O{} O{\acvHonorDateWidth}}{%
   \vspace{\acvSectionContentTopSkip}
   \vspace{-2mm}
   \center
   \setlength\tabcolsep{0pt}
   \setlength{\extrarowheight}{0pt}
+  \setlength{\acv@honordatewidth}{#2}%
   % tabularx scans for \end{cvhonors}: call it outside \ifthenelse and use \center (not \begin{center}).
   \ifthenelse{\equal{#1}{}}
-    {\def\acv@honorstable{\tabularx{\textwidth}{J{#2} >{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X @{\hspace{1em}}r}}}
-    {\def\acv@honorstable{\tabularx{\textwidth}{J{#2} >{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X K{#1}}}}%
+    {\def\acv@honorstable{\tabularx{\textwidth}{l >{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X @{\hspace{1em}}r}}}
+    {\def\acv@honorstable{\tabularx{\textwidth}{l >{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}X K{#1}}}}%
   \acv@honorstable
 }{%
   \endtabularx
@@ -773,7 +788,7 @@
 % Additionally, field separator instead of comma can be given as an optional argument
 % Usage: \cvhonor{<position>}{<title>}{<location>}{<date>}
 \newcommand*{\cvhonor}[5][]{%
-  \honordatestyle{#5} &
+  \acv@honordate{\honordatestyle{#5}} &
   \honorpositionstyle{#2}%
   % A colon selects the title separator; other optional values are annotations
   % (e.g. "~by") that lead into the title, so no comma is added after them.
@@ -1038,7 +1053,7 @@
   \par\vspace{0.3\baselineskip}
 }
 
-% Authors as "Given Family, Given Family, ..." (no "and" before the last one)
+% Authors as "Given von Family Jr., ..." (no "and" before the last one)
 \DeclareDelimFormat{multinamedelim}{\addcomma\space}
 \DeclareDelimFormat{finalnamedelim}{\addcomma\space}
 \DeclareNameFormat{author}{%
@@ -1047,5 +1062,8 @@
   % name:delim prints \multinamedelim / \finalnamedelim before every name but the first
   \usebibmacro{name:delim}{\namepartgiven\namepartfamily}%
   \ifblank{\namepartgiven}{}{\namepartgiven\space}%
+  \ifblank{\namepartprefix}{}{\namepartprefix\space}%
   \namepartfamily%
+  % \isdot: the period of "Jr." is an abbreviation, so the comma before the next name stays
+  \ifblank{\namepartsuffix}{}{\space\namepartsuffix\isdot}%
 }
