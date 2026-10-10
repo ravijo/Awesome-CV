@@ -41,6 +41,11 @@ latex.out/
 # Ignore draft CV and cover letter
 examples/draft/
 
+# TrueType fonts converted by scripts/cv2docx.py
+scripts/.fontcache/
+**/__pycache__/
+*.pyc
+
 ## Auxiliary and intermediate files from other packages:
 # algorithms
 *.alg
