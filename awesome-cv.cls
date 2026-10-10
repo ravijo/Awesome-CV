@@ -178,6 +178,7 @@
 % Boolean value to switch compact theme for cover letter
 \newbool{acvCompactCoverLetter}
 \setbool{acvCompactCoverLetter}{false}
+\newbool{acvHeaderIsStart}
 
 
 %-------------------------------------------------------------------------------
@@ -387,7 +388,12 @@
 
 % Defines writer's homepage (optional)
 % Usage: \homepage{<url>}
-\newcommand*{\homepage}[1]{\def\@homepage{#1}}
+\newcommand*{\homepage}[1]{%
+  \def\@homepage{#1}%
+  % Accept both bare host names and fully qualified URLs.
+  \IfBeginWith{#1}{http://}{}{%
+    \IfBeginWith{#1}{https://}{}{\edef\@homepage{https://#1}}}%
+}
 
 % Defines writer's github (optional)
 % Usage: \github{<github-nick>}
@@ -539,6 +545,11 @@
 \newcommand{\acvHonorDateWidth}{1.5cm}
 \newcommand{\acvHonorLocationWidth}{2.5cm}
 \newlength{\cvskillwidth}
+% Header dimensions are reused by \makecvheader, which may be called more
+% than once in a document (for example, for separate CV sections).
+\newlength{\photodim}
+\newlength{\headertextwidth}
+\newlength{\headerphotowidth}
 
 %-------------------------------------------------------------------------------
 %                Commands for utilities
@@ -561,15 +572,24 @@
   \EndAccSupp{}%
 }
 
+% Render optional free-form header information using the same separator as
+% the other social items. This is intentionally text-only so callers can
+% supply their own formatting or links.
+\newcommand*{\acvHeaderSocialItem}[1]{%
+  \ifbool{acvHeaderIsStart}%
+    {\setbool{acvHeaderIsStart}{false}}%
+    {\acvHeaderSocialSep}%
+  #1%
+}
+
 %-------------------------------------------------------------------------------
 %                Commands for elements of CV structure
 %-------------------------------------------------------------------------------
 % Define a header for CV
 % Usage: \makecvheader
 \newcommand*{\makecvheader}[1][C]{%
-  \newcommand*{\drawphoto}{%
+  \def\drawphoto{%
     \ifthenelse{\isundefined{\@photo}}{}{%
-      \newlength{\photodim}
       \ifthenelse{\equal{\@photoshape}{circle}}%
         {\ifbool{acvCompactCoverLetter}{\setlength{\photodim}{1.0cm}}{\setlength{\photodim}{1.3cm}}}%
         {\ifbool{acvCompactCoverLetter}{\setlength{\photodim}{1.4cm}}{\setlength{\photodim}{1.8cm}}}%
@@ -581,8 +601,6 @@
       \end{tikzpicture}
     }%
   }
-  \newlength{\headertextwidth}
-  \newlength{\headerphotowidth}
   \ifthenelse{\isundefined{\@photo}}{
     \setlength{\headertextwidth}{\textwidth}
     \setlength{\headerphotowidth}{0cm}
@@ -600,150 +618,149 @@
       \headerfirstnamestyle{\@firstname}\headerlastnamestyle{{}\acvHeaderNameDelim\@lastname}%
     }%
     {%
-      \href{http://\@homepage}{\headerfirstnamestyle{\@firstname}\headerlastnamestyle{{}\acvHeaderNameDelim\@lastname}}%
+      \href{\@homepage}{\headerfirstnamestyle{\@firstname}\headerlastnamestyle{{}\acvHeaderNameDelim\@lastname}}%
     }%
     \\[\acvHeaderAfterNameSkip]%
     \ifthenelse{\isundefined{\@position}}{}{\headerpositionstyle{\@position\\[\acvHeaderAfterPositionSkip]}}%
     \ifthenelse{\isundefined{\@address}}{}{\headeraddressstyle{\@address\\[\acvHeaderAfterAddressSkip]}}%
     \headersocialstyle{%
-      \newbool{isstart}%
-      \setbool{isstart}{true}%
+      \setbool{acvHeaderIsStart}{true}%
       \ifthenelse{\isundefined{\@mobile}}%
         {}%
         {%
           \href{\@teluri}{\faAlt{tel:\@mobile}{\faMobile}{\@mobile}}%
-          \setbool{isstart}{false}%
+          \setbool{acvHeaderIsStart}{false}%
         }%
       \ifthenelse{\isundefined{\@whatsapp}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{\@wameuri}{\faAlt{WhatsApp: \@whatsapp}{\faSquareWhatsapp}{\@whatsapp}}%
         }%
       \ifthenelse{\isundefined{\@email}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{mailto:\@email}{\faAlt{mailto:\@email}{\faEnvelope}{\@email}}%
         }%
       \ifthenelse{\isundefined{\@dateofbirth}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \faAlt{DoB: \@dateofbirth}{\faCakeCandles}{\@dateofbirth}%
         }%
       \ifthenelse{\isundefined{\@homepage}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{\@homepage}{\faAlt{homepage: \@homepage}{\faHouseChimney}{\@homepage}}%
         }%
       \ifthenelse{\isundefined{\@github}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://github.com/\@github}{\faAlt{GitHub: @\@github}{\faSquareGithub}{\@github}}%
         }%
       \ifthenelse{\isundefined{\@gitlab}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://gitlab.com/\@gitlab}{\faAlt{GitLab: @\@gitlab}{\faGitlab}{\@gitlab}}%
         }%
       \ifthenelse{\isundefined{\@bitbucket}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://bitbucket.com/\@bitbucket}{\faAlt{BitBucket: @\@bitbucket}{\faBitbucket}{\@bitbucket}}%
         }%
       \ifthenelse{\isundefined{\@stackoverflowid}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://stackoverflow.com/users/\@stackoverflowid}{\faAlt{StackOverflow: @\@stackoverflowname}{\faStackOverflow}{\@stackoverflowname}}%
         }%
       \ifthenelse{\isundefined{\@linkedin}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://www.linkedin.com/in/\@linkedin}{\faAlt{LinkedIn: /in/\@linkedin}{\faLinkedin}{\@linkedin}}%
         }%
       \ifthenelse{\isundefined{\@orcid}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://orcid.org/\@orcid}{\faAlt{OrcID: \@orcid}{\faOrcid}{\@orcid}}%
         }%
       \ifthenelse{\isundefined{\@twitter}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://twitter.com/\@twitter}{\faAlt{Twitter: @\@twitter}{\faTwitter}{\@twitter}}%
         }%
       \ifthenelse{\isundefined{\@x}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://x.com/\@x}{\faAlt{X: @\@x}{\faXTwitter}{\@x}}%
         }%
       \ifthenelse{\isundefined{\@mastodonname}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://\@mastodoninstance/@\@mastodonname}{\faAlt{Mastodon: \@mastodonname{}@\@mastodoninstance}{\faMastodon}{\@mastodonname}}%
         }%
       \ifthenelse{\isundefined{\@skype}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \faAlt{Skype: \@skype}{\faSkype}{\@skype}%
         }%
       \ifthenelse{\isundefined{\@reddit}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://www.reddit.com/user/\@reddit}{\faAlt{Reddit: /u/\@reddit}{\faReddit}{\@reddit}}%
         }%
       \ifthenelse{\isundefined{\@researchgate}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://www.researchgate.net/profile/\@researchgate}{\faAlt{ResearchGate: \@researchgate}{\faResearchgate}{\@researchgate}}%
         }%
       \ifthenelse{\isundefined{\@xing}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://www.xing.com/profile/\@xing}{\faAlt{Xing: \@xing}{\faSquareXing}{\@xing}}
         }%
       \ifthenelse{\isundefined{\@medium}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://medium.com/@\@medium}{\faAlt{Medium: @\@medium}{\faMedium}{\@medium}}%
         }%
       \ifthenelse{\isundefined{\@kaggle}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://kaggle.com/\@kaggle}{\faAlt{Kaggle: \@kaggle}{\faKaggle}{\@kaggle}}%
         }%
       \ifthenelse{\isundefined{\@hackerrank}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://www.hackerrank.com/\@hackerrank}{\faAlt{HackerRank: \@hackerrank}{\faHackerrank}{\@hackerrank}}%
         }%
       \ifthenelse{\isundefined{\@telegram}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://t.me/\@telegram}{\faAlt{Telegram: \@telegram}{\faTelegram}{\@telegram}}%
         }%
       \ifthenelse{\isundefined{\@googlescholarid}}%
         {}%
         {%
-          \ifbool{isstart}{\setbool{isstart}{false}}{\acvHeaderSocialSep}%
+          \ifbool{acvHeaderIsStart}{\setbool{acvHeaderIsStart}{false}}{\acvHeaderSocialSep}%
           \href{https://scholar.google.com/citations?user=\@googlescholarid}{\faAlt{Google Scholar: \@googlescholarid}{\faGraduationCap}{\@googlescholarname}}%
         }%
       \ifthenelse{\isundefined{\@extrainfo}}%
@@ -843,7 +860,7 @@
       {\subentrypositionstyle{#1} & \subentrydatestyle{#3} \\}
     \ifthenelse{\equal{#4}{}}
       {}
-      {\multicolumn{2}{L{17.0cm}}{\subdescriptionstyle{#4}} \\}
+      {\multicolumn{2}{L{\textwidth}}{\subdescriptionstyle{#4}} \\}
   \end{tabular*}
 }
 
