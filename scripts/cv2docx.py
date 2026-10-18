@@ -129,9 +129,6 @@ MONTHS = ["January", "February", "March", "April", "May", "June", "July",
 from fontTools.ttLib import TTFont, newTable  # noqa: E402
 from fontTools.pens.cu2quPen import Cu2QuPen  # noqa: E402
 from fontTools.pens.ttGlyphPen import TTGlyphPen  # noqa: E402
-from fontTools.pens.basePen import BasePen  # noqa: E402
-import struct  # noqa: E402
-import zlib  # noqa: E402
 
 _font_cache = {}
 _font_path_cache = {}
@@ -277,114 +274,6 @@ def ttf_bytes(filename, cache_dir):
         os.replace(tmp, dst)
     with open(dst, "rb") as fh:
         return fh.read()
-
-
-# -----------------------------------------------------------------------------
-# Icons as pictures
-# -----------------------------------------------------------------------------
-# Icons are drawn as small pictures rather than Font Awesome glyphs. Word cannot
-# put the embedded icon fonts into a PDF export: it rasterises each icon and adds
-# an invisible placeholder character beside it, a hidden-text-over-image pattern
-# that mail virus scanners flag. Pictures export as ordinary images.
-ICON_PX = 96  # raster height of 1em, in pixels (~800 dpi for a 9pt icon)
-FA_ROLES = ("fasolid", "fabrands")
-
-
-class _FlattenPen(BasePen):
-    """Collects glyph outlines as closed polygons (curves flattened)."""
-
-    def __init__(self, glyphset, transform):
-        super().__init__(glyphset)
-        self.polys, self.cur, self.t = [], [], transform
-
-    def _moveTo(self, pt):
-        self.cur = [self.t(pt)]
-
-    def _lineTo(self, pt):
-        self.cur.append(self.t(pt))
-
-    def _curveToOne(self, p1, p2, p3):
-        p0 = self._getCurrentPoint()
-        for k in range(1, 9):
-            u = k / 8
-            a, b, c, d = (1 - u) ** 3, 3 * u * (1 - u) ** 2, 3 * u * u * (1 - u), u ** 3
-            self.cur.append(self.t((a * p0[0] + b * p1[0] + c * p2[0] + d * p3[0],
-                                    a * p0[1] + b * p1[1] + c * p2[1] + d * p3[1])))
-
-    def _qCurveToOne(self, p1, p2):
-        p0 = self._getCurrentPoint()
-        for k in range(1, 9):
-            u = k / 8
-            a, b, c = (1 - u) ** 2, 2 * u * (1 - u), u * u
-            self.cur.append(self.t((a * p0[0] + b * p1[0] + c * p2[0], a * p0[1] + b * p1[1] + c * p2[1])))
-
-    def _closePath(self):
-        if len(self.cur) > 2:
-            self.polys.append(self.cur)
-        self.cur = []
-
-    _endPath = _closePath
-
-
-def _png(width, height, rows):
-    def chunk(tag, data):
-        return struct.pack(">I", len(data)) + tag + data + struct.pack(">I", zlib.crc32(tag + data) & 0xFFFFFFFF)
-    raw = b"".join(b"\x00" + bytes(r) for r in rows)
-    return (b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
-            + chunk(b"IDAT", zlib.compress(raw, 9)) + chunk(b"IEND", b""))
-
-
-_icon_cache = {}
-
-
-def icon_picture(role, ch, color):
-    """Opaque PNG of an icon glyph in `color` on white, plus its metrics in em:
-    (png, advance, height, descent). Anti-aliased with 4x4 supersampling."""
-    key = (role, ch, color)
-    if key in _icon_cache:
-        return _icon_cache[key]
-    font = load_font(FONT_FILES[role][0])
-    upem = font["head"].unitsPerEm
-    asc, desc = font["hhea"].ascent, -font["hhea"].descent
-    gname = font.getBestCmap()[ord(ch)]
-    adv = font["hmtx"][gname][0]
-    scale = ICON_PX / (asc + desc)
-    w, h = max(1, round(adv * scale)), ICON_PX
-    pen = _FlattenPen(font.getGlyphSet(), lambda pt: (pt[0] * scale, (asc - pt[1]) * scale))
-    font.getGlyphSet()[gname].draw(pen)
-    edges = []
-    for poly in pen.polys:
-        for (x0, y0), (x1, y1) in zip(poly, poly[1:] + poly[:1]):
-            if y0 != y1:
-                edges.append((x0, y0, x1, y1, 1 if y1 > y0 else -1))
-    cover = [[0.0] * w for _ in range(h)]
-    for row in range(h):
-        line = cover[row]
-        for sub in range(4):
-            y = row + (sub + 0.5) / 4
-            xs = sorted((x0 + (y - y0) * (x1 - x0) / (y1 - y0), d) for x0, y0, x1, y1, d in edges
-                        if min(y0, y1) <= y < max(y0, y1))
-            wind = 0
-            for (xa, da), (xb, _) in zip(xs, xs[1:]):
-                wind += da
-                if wind == 0:
-                    continue
-                xa, xb = max(xa, 0.0), min(xb, float(w))
-                for px in range(int(xa), min(int(xb) + 1, w)):
-                    overlap = min(xb, px + 1) - max(xa, px)
-                    if overlap > 0:
-                        line[px] += overlap / 4
-    r, g, b = (int(color[i:i + 2], 16) for i in (0, 2, 4))
-    rows = []
-    for line in cover:
-        out = bytearray()
-        for c in line:
-            a = min(c, 1.0)
-            out += bytes((round(255 + (r - 255) * a), round(255 + (g - 255) * a), round(255 + (b - 255) * a)))
-        rows.append(out)
-    result = (_png(w, h, rows), adv / upem, (asc + desc) / upem, desc / upem)
-    _icon_cache[key] = result
-    return result
 
 
 def obfuscate(data, key_guid):
@@ -965,42 +854,19 @@ class Builder:
                     out.append((part, seg.fmt))
         return out
 
-    def _new_run(self, par, text, fmt, rid=None):
-        """A styled run, or an inline picture for an icon glyph. rid makes the
-        picture itself a link (a picture is not clickable just by sitting in a
-        w:hyperlink; Word and LibreOffice need a:hlinkClick on the picture)."""
-        if fmt.role not in FA_ROLES:
-            run = par.add_run(text)
-            self._style_run(run, fmt)
-            return run
-        png, adv, height, desc = icon_picture(fmt.role, text, COLORS.get(fmt.color, fmt.color))
-        run = par.add_run()
-        shape = run.add_picture(io.BytesIO(png), width=Pt(adv * fmt.size), height=Pt(height * fmt.size))
-        shape._inline.docPr.set("descr", self.ctx.icon_names.get(text, "icon"))
-        for side in ("distT", "distB", "distL", "distR"):  # no text wrap margins (LibreOffice adds some otherwise)
-            shape._inline.set(side, "0")
-        if rid:
-            A = "http://schemas.openxmlformats.org/drawingml/2006/main"
-            for props in (shape._inline.docPr, shape._inline.find(".//" + qn("pic:cNvPr"))):
-                if props is not None:
-                    link = etree.SubElement(props, f"{{{A}}}hlinkClick")
-                    link.set(qn("r:id"), rid)
-        # Sit on the baseline like the glyph did: lower the picture by the font's descent
-        pos = OxmlElement("w:position")
-        pos.set(qn("w:val"), str(-round(desc * fmt.size * 2)))
-        run._r.get_or_add_rPr().append(pos)
-        return run
-
     def _run(self, par, seg):
         for text, fmt in self._pieces(seg):
-            self._new_run(par, text, fmt)
+            run = par.add_run(text)
+            self._style_run(run, fmt)
 
     def _hyperlink(self, par, seg):
         rid = par.part.relate_to(seg.fmt.link, RT.HYPERLINK, is_external=True)
         h = OxmlElement("w:hyperlink")
         h.set(qn("r:id"), rid)
         for text, fmt in self._pieces(seg):
-            r = self._new_run(par, text, fmt, rid)._r
+            tmp = par.add_run(text)
+            self._style_run(tmp, fmt)
+            r = tmp._r
             r.getparent().remove(r)
             h.append(r)
         par._p.append(h)
@@ -1405,8 +1271,6 @@ class Context:
         self.bbl_path, self.warned_bbl = bbl_path, False
         self.bibcount = 0
         self.icons = load_icon_map()
-        # alt text for icon pictures: \faEnvelope -> "Envelope"
-        self.icon_names = {ch: re.sub(r"(?<!^)(?=[A-Z])", " ", name[2:]) for name, (_, ch) in self.icons.items()}
         self._read_preamble()
         if self.japanese:
             COLORS.update(JP_STYLE["colors"])
